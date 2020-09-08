@@ -23,7 +23,9 @@ require_once SBWCRMA_PATH . 'cpt/sb-wc-rma-cpt.php';
 require_once SBWCRMA_PATH . 'pll/sb-wc-pll-strings.php';
 
 // admin class
+require_once SBWCRMA_PATH . 'classes/assets/class-sbwc-admin-scripts.php';
 require_once SBWCRMA_PATH . 'classes/class-sbwc-admin.php';
 
 // class front
+require_once SBWCRMA_PATH . 'classes/assets/class-sbwc-frontend-scripts.php';
 require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
