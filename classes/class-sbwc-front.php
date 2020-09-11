@@ -54,8 +54,14 @@ class SBWC_Front extends SBWC_Frontend_Scripts
         <!-- rma outer container -->
         <div id="sbwcrma_acc_container">
 
+            <!-- links -->
+            <div id="sbwcrma_nav_cont">
+                <a id="sbwcrma_submit_show" class="sbwcrma_active" href="javascript:void(0)"><?php pll_e('Submit return request'); ?></a>
+                <a id="sbwcrma_returns_show" href="javascript:void(0)"><?php pll_e('Submitted returns'); ?></a>
+            </div>
+
             <!-- orders list and submit return -->
-            <div id="sbwcrma_submit_returns" class="sbwcrma_show">
+            <div id="sbwcrma_submit_returns">
                 <?php
                 // get current user id
                 $user_id = get_current_user_id();
@@ -69,11 +75,10 @@ class SBWC_Front extends SBWC_Frontend_Scripts
 
                     <table id="sbwcrma_order_list">
                         <tr>
-                            <th></th>
-                            <th><?php pll_e('Order Date'); ?></th>
                             <th><?php pll_e('Order ID'); ?></th>
+                            <th><?php pll_e('Order Date'); ?></th>
                             <th><?php pll_e('Order Value'); ?></th>
-                            <th><?php pll_e('View'); ?></th>
+                            <th><?php pll_e('Select Products'); ?></th>
                         </tr>
 
                         <?php
@@ -84,11 +89,10 @@ class SBWC_Front extends SBWC_Frontend_Scripts
                             $date = get_post_field('post_date', $order_id);
                         ?>
                             <tr class="sbwcrma_order_data">
-                                <td><input type="checkbox" class="sbwcrma_select_prod" product-id="<?php echo $order_id; ?>"></td>
-                                <td><?php echo date('j F Y', strtotime($date)); ?></td>
                                 <td><?php echo $order_id; ?></td>
-                                <td><?php echo $currency.' '.$value; ?></td>
-                                <td><a href="javascript:void(0)" rel="noopener noreferrer" product-id="<?php echo $order_id; ?>"><?php pll_e ('View Details'); ?></a></td>
+                                <td><?php echo date('j F Y', strtotime($date)); ?></td>
+                                <td><?php echo $currency . ' ' . $value; ?></td>
+                                <td><a href="javascript:void(0)" rel="noopener noreferrer" product-id="<?php echo $order_id; ?>"><?php pll_e('Click to Select'); ?></a></td>
                             </tr>
 
                         <?php }
@@ -103,11 +107,41 @@ class SBWC_Front extends SBWC_Frontend_Scripts
             </div>
 
             <!-- submitted returns -->
-            <div id="sbwcrma_submitted_returns">
+            <div id="sbwcrma_submitted_returns" style="display: none;">
+
+                <?php
+
+                $rmas = new WP_Query([
+                    'post_type' => 'rma',
+                    'post_status' => 'publish',
+                    'post_author' => $user_id,
+                    'posts_per_page' => -1
+                ]);
+
+                if ($rmas->have_posts()) {
+                    while ($rmas->have_posts()) {
+                        $rmas->the_post();
+
+                        print get_the_ID() . '<br>';
+                    }
+                    wp_reset_postdata();
+                } else { ?>
+                    <p class="sbwcrma_no_returns">
+                        <?php pll_e('There are no returns on record for your account.'); ?>
+                    </p>
+                <?php }
+
+                ?>
+
             </div>
 
         </div>
-<?php }
+<?php
+        // enqueues
+        wp_enqueue_script('jquery');
+        wp_enqueue_style('sbwc-front-css');
+        wp_enqueue_script('sbwc-front-js');
+    }
 
 
     /**

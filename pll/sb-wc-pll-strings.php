@@ -14,7 +14,8 @@
      pll_register_string('sbwcrma_select_order', 'Select the order below you would like to log a return for.');
      pll_register_string('sbwcrma_select_order_date', 'Order Date');
      pll_register_string('sbwcrma_select_order_id', 'Order ID');
-     pll_register_string('sbwcrma_select_order_view', 'View Order');
+     pll_register_string('sbwcrma_select_order_prods', 'Select Products');
+     pll_register_string('sbwcrma_select_click', 'Click to Select');
      pll_register_string('sbwcrma_select_view', 'View');
      pll_register_string('sbwcrma_select_order_value', 'Order Value');
  }
