@@ -31,6 +31,7 @@ function sbwcrma_init()
     require_once SBWCRMA_PATH . 'classes/class-sbwc-admin.php';
 
     // class front
+    require_once SBWCRMA_PATH . 'classes/traits/trait-product-select-modal.php';
     require_once SBWCRMA_PATH . 'classes/assets/class-sbwc-frontend-scripts.php';
 
     // enqueue frontend js and css

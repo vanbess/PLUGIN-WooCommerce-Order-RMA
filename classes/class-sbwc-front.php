@@ -8,6 +8,8 @@
 class SBWC_Front extends SBWC_Frontend_Scripts
 {
 
+    use SBWCRMA_Prod_Select_Modal;
+
     /**
      * Class init
      */
@@ -73,38 +75,45 @@ class SBWC_Front extends SBWC_Frontend_Scripts
                 if ($orders && is_array($orders) || is_object($orders)) { ?>
                     <p><?php pll_e('Select the order below you would like to log a return for.'); ?></p>
 
+                    <!-- user orders list -->
                     <table id="sbwcrma_order_list">
-                        <tr>
-                            <th><?php pll_e('Order ID'); ?></th>
-                            <th><?php pll_e('Order Date'); ?></th>
-                            <th><?php pll_e('Order Value'); ?></th>
-                            <th><?php pll_e('Select Products'); ?></th>
-                        </tr>
-
-                        <?php
-                        foreach ($orders as $order) {
-                            $currency = $order->data['currency'];
-                            $value = $order->data['total'];
-                            $order_id = $order->id;
-                            $date = get_post_field('post_date', $order_id);
-                        ?>
-                            <tr class="sbwcrma_order_data">
-                                <td><?php echo $order_id; ?></td>
-                                <td><?php echo date('j F Y', strtotime($date)); ?></td>
-                                <td><?php echo $currency . ' ' . $value; ?></td>
-                                <td><a href="javascript:void(0)" rel="noopener noreferrer" product-id="<?php echo $order_id; ?>"><?php pll_e('Click to Select'); ?></a></td>
+                        <thead>
+                            <tr>
+                                <th><?php pll_e('Order ID'); ?></th>
+                                <th><?php pll_e('Order Date'); ?></th>
+                                <th><?php pll_e('Order Value'); ?></th>
+                                <th><?php pll_e('Select Products'); ?></th>
                             </tr>
-
-                        <?php }
-                        ?>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // loop through orders
+                            foreach ($orders as $order) {
+                                $currency = $order->data['currency'];
+                                $value = $order->data['total'];
+                                $order_id = $order->id;
+                                $date = get_post_field('post_date', $order_id);
+                            ?>
+                                <tr class="sbwcrma_order_data">
+                                    <td><?php echo $order_id; ?></td>
+                                    <td><?php echo date('j F Y', strtotime($date)); ?></td>
+                                    <td><?php echo $currency . ' ' . $value; ?></td>
+                                    <td><a class="sbwcrma_prod_modal_show" href="javascript:void(0)" order-id="<?php echo $order_id; ?>"><?php pll_e('Click to Select'); ?></a></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
                     </table>
-                <?php } else { ?>
+                    <?php
+                    // product select modal
+                    foreach ($orders as $order) {
+                        $order_id = $order->id;
+                        self::display_modal($order_id);
+                    }
+                } else { ?>
                     <p><?php pll_e('You have not placed any orders yet.'); ?></p>
                 <?php }
-
-
                 ?>
-            </div>
+            </div><!-- #sbwcrma_acc_container end -->
 
             <!-- submitted returns -->
             <div id="sbwcrma_submitted_returns" style="display: none;">

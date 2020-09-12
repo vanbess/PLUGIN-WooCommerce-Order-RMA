@@ -2,7 +2,6 @@
 /**
  * Register polylang strings
  */
-
  if (function_exists('pll_register_string')) {
      pll_register_string('sbwcrma_returns', 'Returns');
      pll_register_string('sbwcrma_orders', 'You can log a return for any of the orders listed below. Simply select the order you would like to lodge a return for and hit submit.');
@@ -18,4 +17,9 @@
      pll_register_string('sbwcrma_select_click', 'Click to Select');
      pll_register_string('sbwcrma_select_view', 'View');
      pll_register_string('sbwcrma_select_order_value', 'Order Value');
+     pll_register_string('sbwcrma_submit_return_request', 'Submit Return Request');
+     pll_register_string('sbwcrma_return_specs', 'Select the product(s) and product quantities you would like to return:');
+     pll_register_string('sbwcrma_return_reason', 'Specify reason for return request (required):');
+     pll_register_string('sbwcrma_return_reason_req', 'Please provide a reason for this return.');
+     pll_register_string('sbwcrma_return_prod_req', 'Select at least one product.');
  }

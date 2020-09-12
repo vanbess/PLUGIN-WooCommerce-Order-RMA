@@ -15,20 +15,71 @@ class SBWC_Frontend_Scripts
         <script>
             jQuery(document).ready(function($) {
 
-                $('a#sbwcrma_submit_show').on('click', function(e){
+                // show orders list
+                $('a#sbwcrma_submit_show').on('click', function(e) {
                     e.preventDefault();
                     $(this).addClass('sbwcrma_active');
                     $('a#sbwcrma_returns_show').removeClass('sbwcrma_active');
                     $('div#sbwcrma_submit_returns').show();
                     $('div#sbwcrma_submitted_returns').hide();
                 });
-                
-                $('a#sbwcrma_returns_show').on('click', function(e){
+
+                // show returns list
+                $('a#sbwcrma_returns_show').on('click', function(e) {
                     e.preventDefault();
                     $(this).addClass('sbwcrma_active');
                     $('a#sbwcrma_submit_show').removeClass('sbwcrma_active');
                     $('div#sbwcrma_submit_returns').hide();
                     $('div#sbwcrma_submitted_returns').show();
+                });
+
+                // show order products modal
+                $('a.sbwcrma_prod_modal_show').each(function() {
+                    $(this).on('click', function(e) {
+                        e.preventDefault();
+
+                        var order_id = $(this).attr('order-id');
+
+                        $('.sbwcrma_prod_select_modal_overlay, .sbwcrma_prod_select_modal').each(function() {
+                            var modal_order_id = $(this).attr('order-id');
+                            if (order_id == modal_order_id) {
+                                $(this).show();
+                            }
+                        });
+
+                    });
+                });
+
+                // hide order products modal
+                $('.sbwcrma_prod_select_modal_overlay, a.sbwcrma_modal_close').on('click', function(e) {
+                    $('.sbwcrma_prod_select_modal_overlay, .sbwcrma_prod_select_modal').hide();
+                });
+
+                // submit rma request
+                $('a.sbwcrma_submit_return').each(function() {
+                    $(this).on('click', function(e) {
+
+                        var selected = [];
+                        var checked_counter = 0;
+
+                        $(this).parent().find('input.sbwcrma_prod_checkbox').each(function() {
+                            if ($(this).prop('checked')) {
+                                selected.push($(this).attr('prod-id'));
+                                checked_counter += 1;
+                            } else {
+                                if (checked_counter >= 1) {
+                                    checked_counter -= 1;
+                                }
+                                if (checked_counter < 1) {
+                                    $('.sbwcrma_required_prods').show();
+                                }
+                            }
+                        });
+
+                        if(checked_counter >= 1){
+                            $('.sbwcrma_required_prods').hide();
+                        }
+                    });
                 });
 
             });
@@ -41,6 +92,7 @@ class SBWC_Frontend_Scripts
     public static function sbwc_front_css()
     { ?>
         <style>
+            /* my account -> returns */
             div#sbwcrma_nav_cont a {
                 display: inline-block;
                 width: 49.7%;
@@ -66,17 +118,99 @@ class SBWC_Frontend_Scripts
                 border: 1px solid #e6e6e6;
             }
 
-            table#sbwcrma_order_list>tbody>tr>th {
-                text-align: center;
-            }
-
-            tr.sbwcrma_order_data>td {
+            table#sbwcrma_order_list>tbody>tr>th,
+            #sbwcrma_order_list>thead>tr>th,
+            #sbwcrma_order_list>tbody>tr>td {
                 text-align: center;
             }
 
             table#sbwcrma_order_list a {
                 color: #267cc3;
                 text-decoration: underline;
+            }
+
+            /* product select modal */
+            .sbwcrma_prod_select_modal_overlay {
+                background: #000000a3;
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 100;
+            }
+
+            .sbwcrma_prod_select_modal {
+                position: absolute;
+                top: -75%;
+                left: 0;
+                background: white;
+                padding: 30px;
+                z-index: 101;
+                border-radius: 3px;
+            }
+
+            a.sbwcrma_modal_close {
+                display: block;
+                width: 20px;
+                height: 20px;
+                background: grey;
+                color: white;
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                text-align: center;
+                border-radius: 50%;
+                line-height: 1.1;
+            }
+
+            #sbwcrma_submit_returns>div>table>thead>tr>th {
+                text-align: center;
+            }
+
+            #sbwcrma_submit_returns>div>table>tbody>tr>td {
+                text-align: center;
+            }
+
+            input.sbwcrma_prod_checkbox {
+                cursor: pointer;
+            }
+
+            p.sbwcrma_instructions {
+                text-align: center;
+                line-height: 2;
+                margin-bottom: 30px;
+                background: #efefef;
+                border: 1px solid #e6e6e6;
+                margin-top: 15px;
+            }
+
+            a.sbwcrma_submit_return {
+                display: block;
+                background: #0073aa;
+                color: white;
+                font-size: 20px;
+                text-transform: uppercase;
+                text-align: center;
+                line-height: 2.2;
+                margin-top: 30px;
+                font-weight: 700;
+            }
+
+            table.sbwcrma_prod_select_table {
+                margin-bottom: 30px;
+            }
+
+            .sbwcrma_prod_select_modal label {
+                text-transform: uppercase;
+                color: #555555;
+            }
+
+            p.sbwcrma_required,
+            p.sbwcrma_required_prods {
+                color: #de1010;
+                font-weight: bold;
+                margin-top: -12px;
             }
         </style>
 <?php }
