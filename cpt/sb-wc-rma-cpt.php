@@ -16,7 +16,7 @@ function create_rma_cpt()
         'archives' => __('RMA Archives', 'sb-wc-rma'),
         'attributes' => __('RMA Attributes', 'sb-wc-rma'),
         'parent_item_colon' => __('Parent RMA:', 'sb-wc-rma'),
-        'all_items' => __('All RMAs', 'sb-wc-rma'),
+        'all_items' => __('RMAs', 'sb-wc-rma'),
         'add_new_item' => __('Add New RMA', 'sb-wc-rma'),
         'add_new' => __('Add New', 'sb-wc-rma'),
         'new_item' => __('New RMA', 'sb-wc-rma'),
@@ -41,13 +41,13 @@ function create_rma_cpt()
         'label' => __('RMA', 'sb-wc-rma'),
         'description' => __('Custom post type for log RMA data', 'sb-wc-rma'),
         'labels' => $labels,
-        'menu_icon' => 'dashicons-media-document',
-        'supports' => array('revisions', 'author', 'custom-fields'),
+        'menu_icon' => '',
+        'supports' => array('revisions'),
         'taxonomies' => array(),
         'public' => true,
         'show_ui' => true,
-        'show_in_menu' => true,
-        'menu_position' => 10,
+        'show_in_menu' => 'edit.php?post_type=product',
+        'menu_position' => 50,
         'show_in_admin_bar' => false,
         'show_in_nav_menus' => false,
         'can_export' => true,
@@ -57,7 +57,11 @@ function create_rma_cpt()
         'show_in_rest' => false,
         'publicly_queryable' => false,
         'capability_type' => 'post',
+        'register_meta_box_cb' => 'rma_data_metabox',
     );
     register_post_type('rma', $args);
 }
 add_action('init', 'create_rma_cpt', 0);
+
+
+

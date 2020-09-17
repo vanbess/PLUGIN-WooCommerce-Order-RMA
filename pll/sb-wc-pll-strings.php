@@ -22,4 +22,8 @@
      pll_register_string('sbwcrma_return_reason', 'Specify reason for return request (required):');
      pll_register_string('sbwcrma_return_reason_req', 'Please provide a reason for this return.');
      pll_register_string('sbwcrma_return_prod_req', 'Select at least one product.');
+     pll_register_string('sbwcrma_rma_emails', 'List of email addresses, separated by commas, to which RMA submission emails should be sent:');
+     pll_register_string('sbwcrma_rma_emails_ph', 'email address 1, email address 2 etc');
+     pll_register_string('sbwcrma_rma_settings', 'RMA Settings');
+     pll_register_string('sbwcrma_rma_settings_save', 'Save Settings');
  }
