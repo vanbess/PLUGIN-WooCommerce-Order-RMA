@@ -5,7 +5,7 @@
  * Loaded via class to enable passing of certain php variable data directly to files
  */
 
-class SBWC_Admin_Scripts
+class SBWCRMA_Admin_Scripts
 {
 
     /**

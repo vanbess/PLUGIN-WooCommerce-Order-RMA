@@ -39,9 +39,9 @@ function sbwcrma_init()
 
     function sbwcrma_front_scripts()
     {
-        wp_enqueue_script('sbwcrma_js_front', SBWC_Frontend_Scripts::sbwc_front_js(), ['jquery']);
-        wp_enqueue_style('sbwcrma_css_front', SBWC_Frontend_Scripts::sbwc_front_css());
+        wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Frontend_Scripts::sbwc_front_js(), ['jquery']);
+        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css());
     }
 
-    require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
+    // require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
 }

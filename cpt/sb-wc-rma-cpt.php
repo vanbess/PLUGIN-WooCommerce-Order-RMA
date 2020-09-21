@@ -5,8 +5,7 @@
  */
 
 // Register Custom Post Type RMA
-function create_rma_cpt()
-{
+function create_rma_cpt() {
 
     $labels = array(
         'name' => _x('RMAs', 'Post Type General Name', 'sb-wc-rma'),
@@ -62,6 +61,3 @@ function create_rma_cpt()
     register_post_type('rma', $args);
 }
 add_action('init', 'create_rma_cpt', 0);
-
-
-

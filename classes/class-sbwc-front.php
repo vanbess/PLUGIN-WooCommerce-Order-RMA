@@ -5,7 +5,7 @@
  * Extends SBWC_Frontend_Scripts
  */
 
-class SBWC_Front extends SBWC_Frontend_Scripts
+class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
 {
 
     use SBWCRMA_Prod_Select_Modal;
@@ -45,7 +45,7 @@ class SBWC_Front extends SBWC_Frontend_Scripts
         add_rewrite_endpoint('returns', EP_PAGES);
 
         // flush rewrite rules to affect changes
-        flush_rewrite_rules();
+        // flush_rewrite_rules();
     }
 
     /**
@@ -158,6 +158,9 @@ class SBWC_Front extends SBWC_Frontend_Scripts
      */
     public static function sbwcrma_submit()
     {
+
+
+        wp_die();
     }
 
 
@@ -168,4 +171,4 @@ class SBWC_Front extends SBWC_Frontend_Scripts
     {
     }
 }
-SBWC_Front::init();
+SBWCRMA_Front::init();

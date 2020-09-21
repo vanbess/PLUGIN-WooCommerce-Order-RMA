@@ -4,14 +4,12 @@
  * Class to render admin options
  */
 
-class SBWC_Admin
-{
+class SBWC_Admin {
 
    /**
     * Class init
     */
-   public static function init()
-   {
+   public static function init() {
       // add settings page
       add_submenu_page('edit.php?post_type=product', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
 
@@ -30,8 +28,7 @@ class SBWC_Admin
    /**
     * Settings page content
     */
-   public static function rma_settings()
-   { ?>
+   public static function rma_settings() { ?>
 
       <div id="sbwcrma_settings_cont">
 
@@ -83,16 +80,14 @@ class SBWC_Admin
    /**
     * Add RMA post type metabox
     */
-   public static function rma_metabox()
-   {
+   public static function rma_metabox() {
       add_meta_box('rma_meta_box', 'RMA Data', [__CLASS__, 'rma_metabox_data'], 'rma', 'normal', 'high');
    }
 
    /**
     * Display RMA post type metabox data
     */
-   public static function rma_metabox_data()
-   { ?>
+   public static function rma_metabox_data() { ?>
 
       <!-- data column left -->
       <div id="sbwcrma_data_left">
@@ -209,8 +204,7 @@ class SBWC_Admin
    /**
     * Save RMA custom data if needed
     */
-   public static function rma_data_save($post_id, $post)
-   {
+   public static function rma_data_save($post_id, $post) {
       if ($post->post_type == 'rma') {
          if (isset($_POST['meta'])) {
             foreach ($_POST['meta'] as $key => $value) {
@@ -223,8 +217,7 @@ class SBWC_Admin
    /**
     * Register scripts
     */
-   public static function rma_register_scripts()
-   {
+   public static function rma_register_scripts() {
       wp_register_script('rma_js', self::rma_js(), ['jquery'], '1.0.0');
       wp_register_script('rma_settings_js', self::rma_settings_js(), ['jquery'], '1.0.0');
       wp_register_style('rma_css', self::rma_css(), '', '1.0.0');
@@ -233,8 +226,7 @@ class SBWC_Admin
    /**
     * Settings JS
     */
-   public static function rma_settings_js()
-   { ?>
+   public static function rma_settings_js() { ?>
       <script>
          jQuery(document).ready(function() {
             // save rma settings
@@ -267,8 +259,7 @@ class SBWC_Admin
    /**
     * JS
     */
-   public static function rma_js()
-   { ?>
+   public static function rma_js() { ?>
 
       <!-- js -->
       <script>
@@ -321,12 +312,10 @@ class SBWC_Admin
 
    <?php }
 
-
    /**
     * CSS
     */
-   public static function rma_css()
-   { ?>
+   public static function rma_css() { ?>
 
       <!-- css -->
       <style>
@@ -451,8 +440,7 @@ class SBWC_Admin
    /**
     * Ajax to save/update settings
     */
-   public static function rma_ajax()
-   {
+   public static function rma_ajax() {
 
       // save rma settings
       if (isset($_POST['sbwrma_emails'])) {
