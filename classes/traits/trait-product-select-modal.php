@@ -4,13 +4,11 @@
  * Shows product select modal
  */
 
-trait SBWCRMA_Prod_Select_Modal
-{
+trait SBWCRMA_Prod_Select_Modal {
     /**
      * Display RMA product select modal
      */
-    private static function display_modal($order_id)
-    {
+    private static function display_modal($order_id) {
         $order_data = wc_get_order($order_id);
         $products = $order_data->get_items();
 ?>
@@ -44,11 +42,13 @@ trait SBWCRMA_Prod_Select_Modal
                     // loop to display products
                     foreach ($products as $product) { ?>
                         <tr>
-                            <td><input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $product->get_id(); ?>"></td>
+                            <td>
+                                <input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $product->get_id(); ?>" target="#sbwcma_prod_qty_<?php echo $product->get_id(); ?>">
+                            </td>
                             <td><?php pll_e($product->get_name()); ?></td>
                             <td><?php print $product->get_quantity(); ?></td>
                             <td>
-                                <select class="sbwcma_prod_qty">
+                                <select id="sbwcma_prod_qty_<?php echo $product->get_id(); ?>">
                                     <?php $max_qty = $product->get_quantity();
                                     for ($i = 1; $i <= $max_qty; $i++) { ?>
                                         <option value="<?php print $i ?>"><?php print $i; ?></option>
@@ -61,13 +61,13 @@ trait SBWCRMA_Prod_Select_Modal
                 </tbody>
             </table>
 
-            <p class="sbwcrma_required_prods" style="display: none;"><?php pll_e ('Select at least one product.'); ?></p>
+            <p class="sbwcrma_required_prods" style="display: none;"><?php pll_e('Select at least one product.'); ?></p>
 
             <!-- return reason -->
             <div>
                 <label for="sbwcrma_return_reason_<?php echo $order_id ?>"><?php pll_e('Specify reason for return request (required):'); ?></label>
                 <textarea class="sbwcrma_return_reason" id="sbwcrma_return_reason_<?php echo $order_id ?>" cols="30" rows="10"></textarea>
-                <p class="sbwcrma_required" style="display: none;"><?php pll_e ('Please provide a reason for this return.'); ?></p>
+                <p class="sbwcrma_required" style="display: none;"><?php pll_e('Please provide a reason for this return.'); ?></p>
             </div>
 
             <!-- submit rma -->

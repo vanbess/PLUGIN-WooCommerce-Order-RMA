@@ -43,5 +43,5 @@ function sbwcrma_init()
         wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css());
     }
 
-    // require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
+    require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
 }

@@ -5,16 +5,14 @@
  * Extends SBWC_Frontend_Scripts
  */
 
-class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
-{
+class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
 
     use SBWCRMA_Prod_Select_Modal;
 
     /**
      * Class init
      */
-    public static function init()
-    {
+    public static function init() {
         // add my account menu item
         add_filter('woocommerce_account_menu_items', [__CLASS__, 'sbwcrma_menu_item'], 40);
 
@@ -23,13 +21,16 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
 
         // display RMA/returns data
         add_action('woocommerce_account_returns_endpoint', [__CLASS__, 'sbwcrma_acc_content']);
+
+        // rma ajax
+        add_action('wp_ajax_nopriv_sbwcrma_submit', [__CLASS__, 'sbwcrma_submit']);
+        add_action('wp_ajax_sbwcrma_submit', [__CLASS__, 'sbwcrma_submit']);
     }
 
     /**
      * Add my account menu item for RMAs
      */
-    public static function sbwcrma_menu_item($menu_links)
-    {
+    public static function sbwcrma_menu_item($menu_links) {
         $menu_links = array_slice($menu_links, 0, 5, true)
             + array('returns' => 'Returns')
             + array_slice($menu_links, 5, NULL, true);
@@ -40,19 +41,17 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
     /**
      * Add rewrite endpoints for menu item
      */
-    public static function sbwcrma_endpoints()
-    {
+    public static function sbwcrma_endpoints() {
         add_rewrite_endpoint('returns', EP_PAGES);
 
         // flush rewrite rules to affect changes
-        // flush_rewrite_rules();
+        flush_rewrite_rules();
     }
 
     /**
      * Display RMA page content
      */
-    public static function sbwcrma_acc_content()
-    { ?>
+    public static function sbwcrma_acc_content() { ?>
         <!-- rma outer container -->
         <div id="sbwcrma_acc_container">
 
@@ -156,10 +155,60 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
     /**
      * Submit RMA request (user side)
      */
-    public static function sbwcrma_submit()
-    {
+    public static function sbwcrma_submit() {
 
+        if (isset($_POST['prod_ids'])) {
 
+            // submitted data
+            $prod_ids = $_POST['prod_ids'];
+            $prod_qtys = $_POST['prod_qtys'];
+            $combined = array_combine($prod_ids, $prod_qtys);
+            $order_id = $_POST['order_id'];
+            $rma_reason = $_POST['rma_reason'];
+
+            // user data
+            $order_data = wc_get_order(($order_id));
+            $user_email = $order_data->get_billing_email();
+            $user_fname = $order_data->get_billing_first_name();
+            $user_lname = $order_data->get_billing_last_name();
+
+            // shipping data
+            $shipp_line_1 = $order_data->get_shipping_address_1();
+            $shipp_line_2 = $order_data->get_shipping_address_2();
+            $shipp_city = $order_data->get_shipping_city();
+            $shipp_country = $order_data->get_shipping_country();
+            $shipp_state = $order_data->get_shipping_state();
+            $shipp_pc = $order_data->get_shipping_postcode();
+
+            // user id
+            $user_id = $order_data->get_customer_id();
+
+            //if $prod_ids/$prod_qtys not empty, insert RMA post, else throw error
+            if (is_array($combined) && !empty($combined)) {
+
+                $rma_inserted  = wp_insert_post([
+                    'post_type' => 'rma',
+                    'post_status' => 'publish',
+                    'post_author' => $user_id,
+                    'meta_input' => [
+                        'sbwcrma_order_id' => $order_id,
+                        'sbwcrma_user_email' => $user_email,
+                        'sbwcrma_user_name' => $user_fname . ' ' . $user_lname,
+                        'sbwcrma_customer_location' => $shipp_line_1 . '\r\n' . $shipp_line_2 . '\r\n' . $shipp_city . '\r\n' . $shipp_country . '\r\n' . $shipp_state . '\r\n' . $shipp_pc,
+                        'sbwcrma_reason' => $rma_reason,
+                        'sbwcrma_products' => maybe_serialize($combined)
+                    ]
+                ]);
+
+                if ($rma_inserted) {
+                    pll_e('Thank you. One of our staff members will review and process your request.');
+                } else {
+                    pll_e('Return submission failed. Please reload the page and try again.');
+                }
+            } elseif (empty($combined)) {
+                pll_e('Please select at least one product to return.');
+            }
+        }
         wp_die();
     }
 
@@ -167,8 +216,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts
     /**
      * Send CS email
      */
-    public static function sbwcrma_send_email()
-    {
+    public static function sbwcrma_send_email() {
     }
 }
 SBWCRMA_Front::init();

@@ -5,13 +5,11 @@
  * Loaded via class to enable passing of certain php variable data directly to files
  */
 
-class SBWCRMA_Frontend_Scripts
-{
+class SBWCRMA_Frontend_Scripts {
     /**
      * JS
      */
-    public static function sbwc_front_js()
-    { ?>
+    public static function sbwc_front_js() { ?>
         <script>
             jQuery(document).ready(function($) {
 
@@ -59,26 +57,45 @@ class SBWCRMA_Frontend_Scripts
                 $('a.sbwcrma_submit_return').each(function() {
                     $(this).on('click', function(e) {
 
-                        var selected = [];
-                        var checked_counter = 0;
+                        // ajax url
+                        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 
-                        $(this).parent().find('input.sbwcrma_prod_checkbox').each(function() {
-                            if ($(this).prop('checked')) {
-                                selected.push($(this).attr('prod-id'));
-                                checked_counter += 1;
-                            } else {
-                                if (checked_counter >= 1) {
-                                    checked_counter -= 1;
-                                }
-                                if (checked_counter < 1) {
-                                    $('.sbwcrma_required_prods').show();
-                                }
-                            }
+                        // get order id
+                        var order_id = $(this).attr('order-id');
+
+                        // get rma reason
+                        var rma_reason = $('#sbwcrma_return_reason_' + order_id).val();
+
+                        // prod data array
+                        var prod_ids = [];
+                        var prod_qtys = [];
+
+                        // find checked checkboxes
+                        $('input.sbwcrma_prod_checkbox:checked').each(function() {
+                            var prod_id = $(this).attr('prod-id');
+                            var target = $(this).attr('target');
+                            var qty = $(':selected', target).val();
+                            prod_ids.push(prod_id);
+                            prod_qtys.push(qty);
                         });
 
-                        if(checked_counter >= 1){
-                            $('.sbwcrma_required_prods').hide();
+                        // submit via ajax if reason is present, else display error
+                        if (rma_reason) {
+                            var data = {
+                                'action': 'sbwcrma_submit',
+                                'prod_ids': prod_ids,
+                                'prod_qtys': prod_qtys,
+                                'order_id': order_id,
+                                'rma_reason': rma_reason
+                            };
+
+                            $.post(ajaxurl, data, function(response) {
+                                console.log(response);
+                            });
+                        } else {
+                            $('p.sbwcrma_required').show();
                         }
+
                     });
                 });
 
@@ -89,8 +106,7 @@ class SBWCRMA_Frontend_Scripts
     /**
      * CSS
      */
-    public static function sbwc_front_css()
-    { ?>
+    public static function sbwc_front_css() { ?>
         <style>
             /* my account -> returns */
             div#sbwcrma_nav_cont a {

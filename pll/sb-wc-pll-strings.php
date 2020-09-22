@@ -7,6 +7,7 @@
      pll_register_string('sbwcrma_orders', 'You can log a return for any of the orders listed below. Simply select the order you would like to lodge a return for and hit submit.');
      pll_register_string('sbwcrma_submit', 'Thank you. One of our staff members will review and process your request.');
      pll_register_string('sbwcrma_add_new_rma', 'Submit return request');
+     pll_register_string('sbwcrma_add_new_rma_fail', 'Return submission failed. Please reload the page and try again.');
      pll_register_string('sbwcrma_submitted_returns', 'Submitted returns');
      pll_register_string('sbwcrma_no_orders', 'You have not placed any orders yet.');
      pll_register_string('sbwcrma_no_returns', 'There are no returns on record for your account.');
@@ -21,7 +22,7 @@
      pll_register_string('sbwcrma_return_specs', 'Select the product(s) and product quantities you would like to return:');
      pll_register_string('sbwcrma_return_reason', 'Specify reason for return request (required):');
      pll_register_string('sbwcrma_return_reason_req', 'Please provide a reason for this return.');
-     pll_register_string('sbwcrma_return_prod_req', 'Select at least one product.');
+     pll_register_string('sbwcrma_return_prod_req', 'Please select at least one product to return.');
      pll_register_string('sbwcrma_rma_emails', 'List of email addresses, separated by commas, to which RMA submission emails should be sent:');
      pll_register_string('sbwcrma_rma_emails_ph', 'email address 1, email address 2 etc');
      pll_register_string('sbwcrma_rma_settings', 'RMA Settings');
