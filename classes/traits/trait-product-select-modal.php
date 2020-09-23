@@ -11,6 +11,8 @@ trait SBWCRMA_Prod_Select_Modal {
     private static function display_modal($order_id) {
         $order_data = wc_get_order($order_id);
         $products = $order_data->get_items();
+
+        print $products['data'];
 ?>
 
         <!-- modal overlay -->
@@ -40,22 +42,34 @@ trait SBWCRMA_Prod_Select_Modal {
                 <tbody>
                     <?php
                     // loop to display products
-                    foreach ($products as $product) { ?>
+                    foreach ($products as $order_line_prod_id => $prod_data) {
+
+                        //decode prod data (it is a JSON string)
+                        $prod_data = json_decode($prod_data, true);
+
+                        // get correct product id
+                        if (!empty($prod_data['variation_id'])) {
+                            $prod_id = $prod_data['variation_id'];
+                        } else {
+                            $prod_id = $prod_data['product_id'];
+                        }
+                    ?>
                         <tr>
                             <td>
-                                <input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $product->get_id(); ?>" target="#sbwcma_prod_qty_<?php echo $product->get_id(); ?>">
+                                <input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $prod_id; ?>" target="#sbwcma_prod_qty_<?php echo $prod_id; ?>">
                             </td>
-                            <td><?php pll_e($product->get_name()); ?></td>
-                            <td><?php print $product->get_quantity(); ?></td>
+                            <td><?php pll_e($prod_data['name']); ?></td>
+                            <td><?php echo $prod_data['quantity']; ?></td>
                             <td>
-                                <select id="sbwcma_prod_qty_<?php echo $product->get_id(); ?>">
-                                    <?php $max_qty = $product->get_quantity();
+                                <select id="sbwcma_prod_qty_<?php echo $prod_id; ?>">
+                                    <?php $max_qty = $prod_data['quantity'];
                                     for ($i = 1; $i <= $max_qty; $i++) { ?>
                                         <option value="<?php print $i ?>"><?php print $i; ?></option>
                                     <?php } ?>
                                 </select>
                             </td>
                         </tr>
+
                     <?php }
                     ?>
                 </tbody>

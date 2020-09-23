@@ -97,7 +97,16 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                                     <td><?php echo $order_id; ?></td>
                                     <td><?php echo date('j F Y', strtotime($date)); ?></td>
                                     <td><?php echo $currency . ' ' . $value; ?></td>
-                                    <td><a class="sbwcrma_prod_modal_show" href="javascript:void(0)" order-id="<?php echo $order_id; ?>"><?php pll_e('Click to Select'); ?></a></td>
+                                    <td>
+                                        <?php
+                                        // check whether RMA has already been submitted for order; display RMA submitted message if true, else display product select
+                                        // modal link
+                                        if (get_post_meta($order_id, 'sbwcrma_request_submitted', true) && get_post_meta($order_id, 'sbwcrma_request_submitted', true) == 'yes') : ?>
+                                            <span class="sbwcrma_submitted"><?php pll_e('Return submitted'); ?></span>
+                                        <?php else : ?>
+                                            <a class="sbwcrma_prod_modal_show" href="javascript:void(0)" order-id="<?php echo $order_id; ?>"><?php pll_e('Click to Select'); ?></a>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -126,12 +135,32 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                     'posts_per_page' => -1
                 ]);
 
-                if ($rmas->have_posts()) {
-                    while ($rmas->have_posts()) {
-                        $rmas->the_post();
+                if ($rmas->have_posts()) { ?>
 
-                        print get_the_ID() . '<br>';
-                    }
+                    <p class="sbwcrma_list">
+                        <?php pll_e('Below is a list of returns you have submitted.'); ?>
+                    </p>
+
+                    <table>
+                        <tr>
+                            <th><?php pll_e('Return ID'); ?></th>
+                            <th><?php pll_e('Submitted On'); ?></th>
+                            <th><?php pll_e('Status'); ?></th>
+                            <th><?php pll_e('View Details'); ?></th>
+                        </tr>
+                        <?php while ($rmas->have_posts()) {
+                            $rmas->the_post(); ?>
+                            <tr>
+                                <td><?php echo get_the_ID(); ?></td>
+                                <td><?php echo get_the_date('j F Y'); ?></td>
+                                <td><?php echo get_post_meta(get_the_ID(), 'sbwcrma_status', true); ?></td>
+                                <td>
+                                    <a class="sbwcrma_view_rma_dets" href="javascript:void(0)"><?php pll_e('View Details'); ?></a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                <?php
                     wp_reset_postdata();
                 } else { ?>
                     <p class="sbwcrma_no_returns">
@@ -173,12 +202,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
             $user_lname = $order_data->get_billing_last_name();
 
             // shipping data
-            $shipp_line_1 = $order_data->get_shipping_address_1();
-            $shipp_line_2 = $order_data->get_shipping_address_2();
-            $shipp_city = $order_data->get_shipping_city();
-            $shipp_country = $order_data->get_shipping_country();
-            $shipp_state = $order_data->get_shipping_state();
-            $shipp_pc = $order_data->get_shipping_postcode();
+            $shipp_address = $order_data->get_formatted_shipping_address();
 
             // user id
             $user_id = $order_data->get_customer_id();
@@ -186,17 +210,23 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
             //if $prod_ids/$prod_qtys not empty, insert RMA post, else throw error
             if (is_array($combined) && !empty($combined)) {
 
+                // insert order meta to show whether or not RMA has already been submitted for order
+                add_post_meta($order_id, 'sbwcrma_request_submitted', 'yes');
+
+                // insert RMA
                 $rma_inserted  = wp_insert_post([
                     'post_type' => 'rma',
                     'post_status' => 'publish',
                     'post_author' => $user_id,
+                    'post_title' => pll__('RMA request submitted by ') . $user_fname . ' ' . $user_lname,
                     'meta_input' => [
                         'sbwcrma_order_id' => $order_id,
                         'sbwcrma_user_email' => $user_email,
                         'sbwcrma_user_name' => $user_fname . ' ' . $user_lname,
-                        'sbwcrma_customer_location' => $shipp_line_1 . '\r\n' . $shipp_line_2 . '\r\n' . $shipp_city . '\r\n' . $shipp_country . '\r\n' . $shipp_state . '\r\n' . $shipp_pc,
+                        'sbwcrma_customer_location' => $shipp_address,
                         'sbwcrma_reason' => $rma_reason,
-                        'sbwcrma_products' => maybe_serialize($combined)
+                        'sbwcrma_products' => maybe_serialize($combined),
+                        'sbwcrma_status' => 'Pending'
                     ]
                 ]);
 

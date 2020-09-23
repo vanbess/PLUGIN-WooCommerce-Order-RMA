@@ -9,6 +9,7 @@
      pll_register_string('sbwcrma_add_new_rma', 'Submit return request');
      pll_register_string('sbwcrma_add_new_rma_fail', 'Return submission failed. Please reload the page and try again.');
      pll_register_string('sbwcrma_submitted_returns', 'Submitted returns');
+     pll_register_string('sbwcrma_submitted_by', 'RMA request submitted by ');
      pll_register_string('sbwcrma_no_orders', 'You have not placed any orders yet.');
      pll_register_string('sbwcrma_no_returns', 'There are no returns on record for your account.');
      pll_register_string('sbwcrma_select_order', 'Select the order below you would like to log a return for.');

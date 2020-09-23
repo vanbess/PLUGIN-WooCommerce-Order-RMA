@@ -90,7 +90,14 @@ class SBWCRMA_Frontend_Scripts {
                             };
 
                             $.post(ajaxurl, data, function(response) {
-                                console.log(response);
+                                $('table.sbwcrma_prod_select_table, #sbwcrma_submit_returns > div:nth-child(4) > div').hide();
+                                $('p.sbwcrma_instructions').text(response);
+                                $('a.sbwcrma_submit_return').text('<?php pll_e('Understood'); ?>')
+                                $('a.sbwcrma_submit_return').removeClass().addClass('sbwcrma_submit_understood');
+                                $('.sbwcrma_submit_understood').on('click', function(e) {
+                                    e.preventDefault();
+                                    location.reload();
+                                });
                             });
                         } else {
                             $('p.sbwcrma_required').show();
@@ -199,6 +206,7 @@ class SBWCRMA_Frontend_Scripts {
                 background: #efefef;
                 border: 1px solid #e6e6e6;
                 margin-top: 15px;
+                padding: 0 15px;
             }
 
             a.sbwcrma_submit_return {
@@ -211,6 +219,43 @@ class SBWCRMA_Frontend_Scripts {
                 line-height: 2.2;
                 margin-top: 30px;
                 font-weight: 700;
+            }
+
+            a.sbwcrma_submit_understood {
+                display: block;
+                text-align: center;
+                text-transform: uppercase;
+                background: #0073aa;
+                color: white;
+                line-height: 2.2;
+                font-size: 20px;
+                font-weight: 700;
+                border-radius: 3px;
+            }
+
+            span.sbwcrma_submitted {
+                display: block;
+                background: lightgreen;
+                padding: 5px;
+                color: #333;
+            }
+
+            p.sbwcrma_list {
+                background: #efefef;
+                line-height: 2;
+                text-align: center;
+                margin-bottom: 30px;
+                border: 1px solid #e6e6e6;
+            }
+
+            div#sbwcrma_submitted_returns table tr td,
+            div#sbwcrma_submitted_returns table tr th {
+                text-align: center;
+            }
+
+            div#sbwcrma_submitted_returns table tr td a {
+                color: #267cc3;
+                text-decoration: underline;
             }
 
             table.sbwcrma_prod_select_table {

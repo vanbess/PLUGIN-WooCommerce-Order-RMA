@@ -11,7 +11,7 @@ class SBWC_Admin {
     */
    public static function init() {
       // add settings page
-      add_submenu_page('edit.php?post_type=product', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
+      // add_submenu_page('edit.php?post_type=product', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
 
       // scripts
       add_action('admin_enqueue_scripts', [__CLASS__, 'rma_register_scripts']);
@@ -95,22 +95,24 @@ class SBWC_Admin {
          <!-- order and rma id -->
          <div id="sbwcrma_order_rma_id" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_order_id"><?php pll_e('Order ID'); ?></label>
-            <input type="text" name="sbwcrma_order_id" id="sbwcrma_order_id">
+            <input type="text" name="sbwcrma_order_id" id="sbwcrma_order_id" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_order_id', true); ?>">
             <br>
             <label for="sbwrma_rma_id"><?php pll_e('RMA ID'); ?></label>
-            <input type="text" name="sbwrma_rma_id" id="sbwrma_rma_id" readonly="true">
+            <input type="text" name="sbwrma_rma_id" id="sbwrma_rma_id" readonly="true" value="<?php echo get_the_ID(); ?>">
          </div>
 
          <!-- client data -->
          <div id="sbwcrma_client_data" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_user_name"><?php pll_e('Client name'); ?></label>
-            <input type="text" name="sbwcrma_user_name" id="sbwcrma_user_name">
+            <input type="text" name="sbwcrma_user_name" id="sbwcrma_user_name" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_name', true); ?>">
             <br>
             <label for="sbwcrma_user_email"><?php pll_e('Client email address'); ?></label>
-            <input type="email" name="sbwcrma_user_email" id="sbwcrma_user_email">
+            <input type="email" name="sbwcrma_user_email" id="sbwcrma_user_email" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_email', true); ?>">
             <br>
-            <label for="sbwcrma_customer_location"><?php pll_e('Client location'); ?></label>
-            <textarea name="sbwcrma_customer_location" id="sbwcrma_customer_location" cols="30" rows="10"></textarea>
+            <label for="sbwcrma_customer_location"><?php pll_e('Client shipping address/location'); ?></label>
+            <div id="sbwcrma_customer_location">
+               <?php echo get_post_meta(get_the_ID(), 'sbwcrma_customer_location', true); ?>
+            </div>
          </div>
 
          <!-- rma shipping dets -->
@@ -125,9 +127,6 @@ class SBWC_Admin {
             <input type="text" name="sbwcrma_tracking_no" id="sbwcrma_tracking_no" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>">
             <br>
          </div>
-
-
-
       </div>
 
       <!-- data column right -->
@@ -147,7 +146,7 @@ class SBWC_Admin {
                <option value="pending"><?php pll_e('Pending'); ?></option>
                <option value="instructions sent"><?php pll_e('Instructions sent'); ?></option>
                <option value="items shipped"><?php pll_e('Items shipped'); ?></option>
-               <option value="pending approval"><?php pll_e('Pending approvial'); ?></option>
+               <option value="pending approval"><?php pll_e('Pending approval'); ?></option>
                <option value="approved"><?php pll_e('Approved'); ?></option>
                <option value="rejected"><?php pll_e('Rejected'); ?></option>
             </select>
@@ -156,7 +155,7 @@ class SBWC_Admin {
          <!-- rma reason -->
          <div id="sbwcrma_request_reason" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_reason"><?php pll_e('Reason for RMA request'); ?></label>
-            <textarea name="sbwcrma_reason" id="sbwcrma_reason" cols="30" rows="10"></textarea>
+            <textarea name="sbwcrma_reason" id="sbwcrma_reason" cols="30" rows="10"><?php echo get_post_meta(get_the_ID(), 'sbwcrma_reason', true); ?></textarea>
          </div>
 
          <!-- rma products -->
@@ -168,14 +167,24 @@ class SBWC_Admin {
                   <th><?php pll_e('Product Name'); ?></th>
                   <th><?php pll_e('RMA Qty'); ?></th>
                </tr>
-               <tr>
-                  <td>1234</td>
-                  <td>Prod name here</td>
-                  <td>RMA qty here</td>
-               </tr>
+
+               <?php
+
+               // get rma prods
+               $rma_prods = maybe_unserialize(get_post_meta(get_the_ID(), 'sbwcrma_products', true));
+
+               // loop through rma products
+               foreach ($rma_prods as $prod_id => $qty) {
+                  ?>
+                  <tr>
+                     <td><?php echo $prod_id; ?></td>
+                     <td><?php echo get_the_title($prod_id); ?></td>
+                     <td><?php echo $qty; ?></td>
+                  </tr>
+               <?php } ?>
+
             </table>
          </div>
-
       </div>
 
       <!-- rma actions -->
@@ -432,6 +441,12 @@ class SBWC_Admin {
 
          div#rma_meta_box {
             overflow: auto;
+         }
+
+         div#sbwcrma_customer_location {
+            padding: 10px;
+            font-size: 14px;
+            background: #eeeeee;
          }
       </style>
 
