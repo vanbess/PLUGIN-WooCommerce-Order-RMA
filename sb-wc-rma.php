@@ -32,6 +32,7 @@ function sbwcrma_init()
 
     // class front
     require_once SBWCRMA_PATH . 'classes/traits/trait-product-select-modal.php';
+    require_once SBWCRMA_PATH . 'classes/traits/trait-rma-data-modal.php';
     require_once SBWCRMA_PATH . 'classes/assets/class-sbwc-frontend-scripts.php';
 
     // enqueue frontend js and css

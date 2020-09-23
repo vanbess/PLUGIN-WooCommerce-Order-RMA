@@ -11,7 +11,7 @@ class SBWC_Admin {
     */
    public static function init() {
       // add settings page
-      // add_submenu_page('edit.php?post_type=product', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
+      add_submenu_page('edit.php?post_type=rma', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
 
       // scripts
       add_action('admin_enqueue_scripts', [__CLASS__, 'rma_register_scripts']);
@@ -40,30 +40,6 @@ class SBWC_Admin {
                <?php pll_e('List of email addresses, separated by commas, to which RMA submission emails should be sent:'); ?>
             </label>
             <input value="<?php print get_option('sbwcrma_emails'); ?>" type="text" name="sbwcrma_emails" id="sbwcrma_emails" placeholder="<?php pll_e('email address 1, email address 2 etc'); ?>">
-         </div>
-
-         <!-- rma instructions email content -->
-         <div class="sbwcrma_input_cont">
-            <label class="sbwcrma_admin_labels" for="sbwcrma_instr_email">
-               <?php pll_e('Content for RMA instructions email:'); ?>
-            </label>
-            <textarea name="sbwcrma_instr_email" id="sbwcrma_instr_email" cols="30" rows="10"><?php print get_option('sbwcrma_instr_email'); ?></textarea>
-         </div>
-
-         <!-- rma accept email content -->
-         <div class="sbwcrma_input_cont">
-            <label class="sbwcrma_admin_labels" for="sbwcrma_accept_email">
-               <?php pll_e('Content for RMA approval email:'); ?>
-            </label>
-            <textarea name="sbwcrma_accept_email" id="sbwcrma_accept_email" cols="30" rows="10"><?php print get_option('sbwcrma_accept_email'); ?></textarea>
-         </div>
-
-         <!-- rma reject email content -->
-         <div class="sbwcrma_input_cont">
-            <label class="sbwcrma_admin_labels" for="sbwcrma_reject_email">
-               <?php pll_e('Content for RMA rejection email:'); ?>
-            </label>
-            <textarea name="sbwcrma_reject_email" id="sbwcrma_reject_email" cols="30" rows="10"><?php print get_option('sbwcrma_reject_email'); ?></textarea>
          </div>
 
          <!-- save settings -->

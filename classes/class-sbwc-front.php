@@ -7,7 +7,7 @@
 
 class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
 
-    use SBWCRMA_Prod_Select_Modal;
+    use SBWCRMA_Prod_Select_Modal, SBWCRMA_Data_Modal;
 
     /**
      * Class init
@@ -158,7 +158,10 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                                     <a class="sbwcrma_view_rma_dets" href="javascript:void(0)"><?php pll_e('View Details'); ?></a>
                                 </td>
                             </tr>
-                        <?php } ?>
+                        <?php
+                            // rma data modal
+                            self::rma_data_modal(get_the_ID());
+                        } ?>
                     </table>
                 <?php
                     wp_reset_postdata();
@@ -170,9 +173,8 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
 
                 ?>
 
-            </div>
-
-        </div>
+            </div><!-- #sbwcrma_submitted_returns -->
+        </div><!-- #sbwcrma_acc_container -->
 <?php
         // enqueues
         wp_enqueue_script('jquery');

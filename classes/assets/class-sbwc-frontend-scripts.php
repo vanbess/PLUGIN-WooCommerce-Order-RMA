@@ -273,6 +273,69 @@ class SBWCRMA_Frontend_Scripts {
                 font-weight: bold;
                 margin-top: -12px;
             }
+
+            /* rma data modal */
+            .sbwcrma_data_overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: #00000075;
+                z-index: 100000;
+            }
+
+            .sbwcrma_data_modal {
+                position: fixed;
+                z-index: 100001;
+                top: 30px;
+                left: 25vw;
+                width: 50vw;
+                min-width: 320px;
+                padding: 40px;
+                border-radius: 3px;
+                background: white;
+            }
+
+            div#sbwcrma_submitted_returns {
+                position: relative;
+            }
+
+            a.sbwcrma_data_modal_close {
+                display: block;
+                width: 20px;
+                height: 20px;
+                background: lightgray;
+                text-align: center;
+                line-height: 1.1;
+                border-radius: 50%;
+                position: absolute;
+                right: 15px;
+                top: 15px;
+            }
+
+            span.sbwcrma_data_key {
+                display: inline-block;
+                width: 30%;
+                font-weight: 600;
+                line-height: 2.2;
+                text-align: right;
+                padding-right: 15px;
+            }
+
+            span.sbwcrma_data_val {
+                display: inline-block;
+                vertical-align: top;
+                line-height: 2.2;
+                padding-left: 15px;
+            }
+
+            #sbwcrma_submitted_returns h1 {
+                font-size: 20px;
+                text-align: center;
+                background: #efefef;
+                line-height: 2;
+            }
         </style>
 <?php }
 }
