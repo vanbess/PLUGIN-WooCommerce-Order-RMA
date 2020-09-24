@@ -113,6 +113,42 @@ class SBWCRMA_Frontend_Scripts {
                         $('#sbwcrma_data_overlay_' + rma_id + ', #sbwcrma_data_modal_' + rma_id).show();
                     });
                 });
+
+                $('a.sbwcrma_data_modal_close, .sbwcrma_data_overlay').click(function() {
+                    $('.sbwcrma_data_overlay, .sbwcrma_data_modal').hide();
+                });
+
+                // show shipping data input
+                $('a.sbwcrma_submit_ship_data').click(function(e) {
+                    e.preventDefault();
+                    $('.sbwcrma_ship_data').toggle();
+                });
+
+                // submit shipping data
+                $('a.sbwcrma_submit_shipp_data').click(function(e) {
+                    var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+                    var shipco = $('input#sbwcrma_ship_co').val();
+                    var shiptrack = $('input#sbwcrma_ship_track_no').val();
+                    var rma_id = $(this).attr('rma-id');
+
+                    if (!shipco || !shiptrack) {
+                        $('.shipp_error').show();
+                    } else {
+                        $('.shipp_error').hide();
+
+                        var data = {
+                            'action': 'sbwcrma_submit',
+                            'shipco': shipco,
+                            'shiptrack': shiptrack,
+                            'rma_id': rma_id
+                        };
+
+                        $.post(ajaxurl, data, function(response) {
+                           alert(response);
+                           location.reload();
+                        });
+                    }
+                });
             });
         </script>
     <?php }
@@ -293,10 +329,10 @@ class SBWCRMA_Frontend_Scripts {
             }
 
             .sbwcrma_data_modal {
-                position: fixed;
+                position: absolute;
                 z-index: 100001;
-                top: 30px;
-                left: 25vw;
+                top: -40vh;
+                left: -11vw;
                 width: 50vw;
                 min-width: 320px;
                 padding: 40px;
@@ -335,6 +371,7 @@ class SBWCRMA_Frontend_Scripts {
                 vertical-align: top;
                 line-height: 2.2;
                 padding-left: 15px;
+                width: 69%;
             }
 
             #sbwcrma_submitted_returns h1 {
@@ -342,6 +379,82 @@ class SBWCRMA_Frontend_Scripts {
                 text-align: center;
                 background: #efefef;
                 line-height: 2;
+            }
+
+            .sbwcrma_data_modal_prods_cont>span {
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            .sbwcrma_data_modal_prods_cont>span {
+                display: inline-block;
+                width: 32.9%;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                margin-bottom: 5px;
+                background: #efefef;
+                font-weight: 600;
+            }
+
+            .sbwcrma_rma_modal_prod_row>span {
+                display: inline-block;
+                width: 32.9%;
+                text-align: center;
+                vertical-align: middle;
+                padding: 5px 0;
+            }
+
+            .sbwcrma_data_modal_prods_cont {
+                font-size: 14px;
+                padding: 5px 0;
+            }
+
+            .sbwcrma_rma_modal_prod_row {
+                border: 1px solid #ccc;
+                line-height: 1.5;
+                margin-bottom: 5px;
+            }
+
+            a.sbwcrma_submit_ship_data {
+                display: block;
+                margin: 30px 0;
+                text-align: center;
+                font-size: 20px;
+                background: #267cc3;
+                color: white;
+                line-height: 2.2;
+                border-radius: 3px;
+                font-weight: 600;
+            }
+
+            a.sbwcrma_submit_shipp_data {
+                display: block;
+                margin: 30px 0;
+                text-align: center;
+                font-size: 20px;
+                border: 1px solid #267cc3;
+                color: #267cc3;
+                line-height: 2.2;
+                border-radius: 3px;
+                font-weight: 600;
+            }
+
+            .sbwcrma_ship_data label {
+                font-size: 16px;
+                color: #666;
+            }
+
+            span.shipp_error {
+                color: red;
+                font-weight: 600;
+            }
+
+            p.sbwcrma_ship_data_submitted {
+                text-align: center;
+                font-weight: 600;
+                background: #efefef;
+                line-height: 2.5;
             }
         </style>
 <?php }

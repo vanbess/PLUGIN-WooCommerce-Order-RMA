@@ -241,6 +241,24 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                 pll_e('Please select at least one product to return.');
             }
         }
+
+        // submit shipping data for rma (frontend)
+        if (isset($_POST['shipco'])) {
+            $shipco = $_POST['shipco'];
+            $shiptrack = $_POST['shiptrack'];
+            $rma_id = $_POST['rma_id'];
+
+            $shipco_added = update_post_meta($rma_id, 'sbwcrma_shipping_co', $shipco);
+            $shiptrack_added = update_post_meta($rma_id, 'sbwcrma_tracking_no', $shiptrack);
+            $status_updated = update_post_meta($rma_id, 'sbwcrma_status', 'items shipped');
+
+            if ($shipco_added || $shiptrack_added || $status_updated) {
+                pll_e('Shipping data updated. Thank you.');
+            } else {
+                pll_e('Could not update shipping data. Please reload the page and try again.');
+            }
+            
+        }
         wp_die();
     }
 

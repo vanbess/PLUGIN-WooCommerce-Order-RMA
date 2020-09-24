@@ -94,13 +94,13 @@ class SBWC_Admin {
          <!-- rma shipping dets -->
          <div id="sbwcrma_shipping_dets" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_warehouse"><?php pll_e('Specify warehouse to which RMA items should be sent'); ?></label>
-            <input type="text" name="sbwcrma_warehouse" id="sbwcrma_warehouse">
+            <input type="text" name="sbwcrma_warehouse" id="sbwcrma_warehouse" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_warehouse', true); ?>">
             <br>
             <label for="sbwcrma_shipping_co"><?php pll_e('Shipping company'); ?></label>
-            <input type="text" name="sbwcrma_shipping_co" id="sbwcrma_shipping_co" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>">
+            <input type="text" name="sbwcrma_shipping_co" id="sbwcrma_shipping_co" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_shipping_co', true); ?>">
             <br>
             <label for="sbwcrma_tracking_no"><?php pll_e('RMA shipment tracking number'); ?></label>
-            <input type="text" name="sbwcrma_tracking_no" id="sbwcrma_tracking_no" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>">
+            <input type="text" name="sbwcrma_tracking_no" id="sbwcrma_tracking_no" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_tracking_no', true); ?>">
             <br>
          </div>
       </div>
@@ -122,7 +122,7 @@ class SBWC_Admin {
                <option value="pending"><?php pll_e('Pending'); ?></option>
                <option value="instructions sent"><?php pll_e('Instructions sent'); ?></option>
                <option value="items shipped"><?php pll_e('Items shipped'); ?></option>
-               <option value="pending approval"><?php pll_e('Pending approval'); ?></option>
+               <option value="items received - pending inspection"><?php pll_e('Items received - pending inspection'); ?></option>
                <option value="approved"><?php pll_e('Approved'); ?></option>
                <option value="rejected"><?php pll_e('Rejected'); ?></option>
             </select>

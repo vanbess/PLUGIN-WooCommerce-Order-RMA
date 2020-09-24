@@ -24,6 +24,8 @@ trait SBWCRMA_Data_Modal {
 
             // generate meta data array
             $meta_arr = [];
+
+            // loop to pupolate $meta_arr with data
             foreach ($rma_meta as $key => $value) {
 
                 // change key names to readable format
@@ -50,7 +52,7 @@ trait SBWCRMA_Data_Modal {
                         break;
                     case $key == 'sbwcrma_products':
                         $key = 'Products';
-                        $meta_arr[$key] = $value[0];
+                        $meta_arr[$key] = '';
                         break;
                     case $key == 'sbwcrma_status':
                         $key = 'Return status';
@@ -79,7 +81,21 @@ trait SBWCRMA_Data_Modal {
                     <span class="sbwcrma_data_val">
                         <?php if ($value != '') {
                             echo ucfirst($value);
-                        } else {
+                        } elseif ($key == 'Products') {
+                            $products = maybe_unserialize(get_post_meta($rma_id, 'sbwcrma_products', true)); ?>
+                            <div class="sbwcrma_data_modal_prods_cont">
+                                <span><?php pll_e('Product ID'); ?></span>
+                                <span><?php pll_e('Product Name'); ?></span>
+                                <span><?php pll_e('Qty'); ?></span>
+                                <?php foreach ($products as $id => $qty) { ?>
+                                    <div class="sbwcrma_rma_modal_prod_row">
+                                        <span><?php echo $id; ?></span>
+                                        <span><?php echo get_the_title($id); ?></span>
+                                        <span><?php echo $qty; ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else {
                             pll_e('Not specified');
                         } ?>
                     </span>
@@ -89,10 +105,10 @@ trait SBWCRMA_Data_Modal {
             // check rma status; if 'instructions sent', display button for user to add shipping details for package
             $rma_status = get_post_meta($rma_id, 'sbwcrma_status', true);
 
-            if ($rma_status == 'instructions sent') { ?>
-                <a class="sbwcrma_submit_ship_data" href="javascript:void(0)"><?php pll_e('Already shipped? Add shipping data'); ?></a>
+            if ($rma_status == 'instructions sent' && get_post_meta($rma_id, 'sbwcrma_warehouse', true)) { ?>
+                <a class="sbwcrma_submit_ship_data" href="javascript:void(0)"><?php pll_e('Already shipped? Submit shipping data'); ?></a>
 
-                <div class="sbwcrma_ship_data">
+                <div class="sbwcrma_ship_data" style="display: none;">
                     <!-- shipping company -->
                     <label for="sbwcrma_ship_co"><?php pll_e('Specify shipping company:*'); ?></label>
                     <input type="text" id="sbwcrma_ship_co">
@@ -100,6 +116,12 @@ trait SBWCRMA_Data_Modal {
                     <!-- tracking number -->
                     <label for="sbwcrma_ship_track_no"><?php pll_e('Specify package tracking number:*'); ?></label>
                     <input type="text" id="sbwcrma_ship_track_no">
+
+                    <!-- shipping data error -->
+                    <span class="shipp_error" style="display: none;"><?php pll_e ('Please provide all required shipping data.'); ?></span>
+
+                    <!-- submit shipping data -->
+                    <a class="sbwcrma_submit_shipp_data" rma-id="<?php echo $rma_id; ?>" href="javascript:void(0)"><?php pll_e ('Submit shipping data'); ?></a>
                 </div>
             <?php }
 
