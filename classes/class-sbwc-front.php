@@ -153,9 +153,9 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                             <tr>
                                 <td><?php echo get_the_ID(); ?></td>
                                 <td><?php echo get_the_date('j F Y'); ?></td>
-                                <td><?php echo get_post_meta(get_the_ID(), 'sbwcrma_status', true); ?></td>
+                                <td><?php echo ucfirst(get_post_meta(get_the_ID(), 'sbwcrma_status', true)); ?></td>
                                 <td>
-                                    <a class="sbwcrma_view_rma_dets" href="javascript:void(0)"><?php pll_e('View Details'); ?></a>
+                                    <a class="sbwcrma_view_rma_dets" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('View Details'); ?></a>
                                 </td>
                             </tr>
                         <?php

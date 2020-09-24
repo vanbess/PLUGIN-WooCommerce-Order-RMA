@@ -106,6 +106,13 @@ class SBWCRMA_Frontend_Scripts {
                     });
                 });
 
+                // show/hide rma data modal
+                $('a.sbwcrma_view_rma_dets').each(function() {
+                    $(this).click(function(e) {
+                        var rma_id = $(this).attr('rma-id');
+                        $('#sbwcrma_data_overlay_' + rma_id + ', #sbwcrma_data_modal_' + rma_id).show();
+                    });
+                });
             });
         </script>
     <?php }

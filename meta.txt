@@ -1,0 +1,55 @@
+Array
+(
+    [_wpnonce] => 9889eea7b1
+    [_wp_http_referer] => /wp-admin/post.php?post=109747&action=edit
+    [user_ID] => 58
+    [action] => editpost
+    [originalaction] => editpost
+    [post_author] => 58
+    [post_type] => rma
+    [original_post_status] => publish
+    [referredby] => 
+    [_wp_original_http_referer] => 
+    [post_ID] => 109747
+    [meta-box-order-nonce] => e94b101b43
+    [closedpostboxesnonce] => 265bc79725
+    [original_post_title] => RMA request submitted by John John
+    [hidden_post_status] => publish
+    [post_status] => publish
+    [hidden_post_password] => 
+    [hidden_post_visibility] => public
+    [visibility] => public
+    [post_password] => 
+    [mm] => 09
+    [jj] => 23
+    [aa] => 2020
+    [hh] => 03
+    [mn] => 33
+    [ss] => 54
+    [hidden_mm] => 09
+    [cur_mm] => 09
+    [hidden_jj] => 23
+    [cur_jj] => 23
+    [hidden_aa] => 2020
+    [cur_aa] => 2020
+    [hidden_hh] => 03
+    [cur_hh] => 21
+    [hidden_mn] => 33
+    [cur_mn] => 19
+    [original_publish] => Update
+    [save] => Update
+    [sbwcrma_order_id] => 101049
+    [sbwrma_rma_id] => 109747
+    [sbwcrma_user_name] => John John
+    [sbwcrma_user_email] => werner@smartecom.io
+    [sbwcrma_warehouse] => 
+    [sbwcrma_shipping_co] => 
+    [sbwcrma_tracking_no] => 
+    [sbwcrma_status] => pending
+    [sbwcrma_reason] => Products defective. I would like a refund please. Thanks.
+    [post_name] => rma-request-submitted-by-john-john-2
+    [post_mime_type] => 
+    [ID] => 109747
+    [comment_status] => closed
+    [ping_status] => closed
+)

@@ -71,7 +71,7 @@ class SBWC_Admin {
          <!-- order and rma id -->
          <div id="sbwcrma_order_rma_id" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_order_id"><?php pll_e('Order ID'); ?></label>
-            <input type="text" name="sbwcrma_order_id" id="sbwcrma_order_id" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_order_id', true); ?>">
+            <input readonly type="text" name="sbwcrma_order_id" id="sbwcrma_order_id" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_order_id', true); ?>">
             <br>
             <label for="sbwrma_rma_id"><?php pll_e('RMA ID'); ?></label>
             <input type="text" name="sbwrma_rma_id" id="sbwrma_rma_id" readonly="true" value="<?php echo get_the_ID(); ?>">
@@ -80,10 +80,10 @@ class SBWC_Admin {
          <!-- client data -->
          <div id="sbwcrma_client_data" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_user_name"><?php pll_e('Client name'); ?></label>
-            <input type="text" name="sbwcrma_user_name" id="sbwcrma_user_name" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_name', true); ?>">
+            <input readonly type="text" name="sbwcrma_user_name" id="sbwcrma_user_name" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_name', true); ?>">
             <br>
             <label for="sbwcrma_user_email"><?php pll_e('Client email address'); ?></label>
-            <input type="email" name="sbwcrma_user_email" id="sbwcrma_user_email" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_email', true); ?>">
+            <input readonly type="email" name="sbwcrma_user_email" id="sbwcrma_user_email" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_user_email', true); ?>">
             <br>
             <label for="sbwcrma_customer_location"><?php pll_e('Client shipping address/location'); ?></label>
             <div id="sbwcrma_customer_location">
@@ -131,7 +131,7 @@ class SBWC_Admin {
          <!-- rma reason -->
          <div id="sbwcrma_request_reason" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_reason"><?php pll_e('Reason for RMA request'); ?></label>
-            <textarea name="sbwcrma_reason" id="sbwcrma_reason" cols="30" rows="10"><?php echo get_post_meta(get_the_ID(), 'sbwcrma_reason', true); ?></textarea>
+            <textarea name="sbwcrma_reason" readonly id="sbwcrma_reason" cols="30" rows="10"><?php echo get_post_meta(get_the_ID(), 'sbwcrma_reason', true); ?></textarea>
          </div>
 
          <!-- rma products -->
@@ -191,10 +191,13 @@ class SBWC_Admin {
     */
    public static function rma_data_save($post_id, $post) {
       if ($post->post_type == 'rma') {
-         if (isset($_POST['meta'])) {
-            foreach ($_POST['meta'] as $key => $value) {
-               update_post_meta($post_id, $key, $value);
-            }
+         // shipping warehouse
+         if(isset($_POST['sbwcrma_warehouse'])){
+            update_post_meta($post_id, 'sbwcrma_warehouse', $_POST['sbwcrma_warehouse']);
+         }
+         // rma status
+         if(isset($_POST['sbwcrma_status'])){
+            update_post_meta($post_id, 'sbwcrma_status', $_POST['sbwcrma_status']);
          }
       }
    }
@@ -269,7 +272,7 @@ class SBWC_Admin {
                e.preventDefault();
 
                var data = {
-                  'action': 'rma_ajax'
+                  'action': 'rma_ajax',
                   'reject_rma': '<?php echo get_the_ID(); ?>'
                };
 
@@ -283,7 +286,7 @@ class SBWC_Admin {
                e.preventDefault();
 
                var data = {
-                  'action': 'rma_ajax'
+                  'action': 'rma_ajax',
                   'approve_rma': '<?php echo get_the_ID(); ?>'
                };
 
@@ -291,6 +294,10 @@ class SBWC_Admin {
 
                });
             });
+
+            // set rma status
+            var rma_status = '<?php echo get_post_meta(get_the_ID(), 'sbwcrma_status', true); ?>';
+            $('#sbwcrma_status').val(rma_status);
 
          });
       </script>
