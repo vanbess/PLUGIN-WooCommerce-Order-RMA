@@ -42,6 +42,7 @@ class SBWCRMA_Frontend_Scripts {
                             var modal_order_id = $(this).attr('order-id');
                             if (order_id == modal_order_id) {
                                 $(this).show();
+                                $(this).find('a.sbwcrma_submit_return').attr('active', 'yes');
                             }
                         });
 
@@ -51,58 +52,56 @@ class SBWCRMA_Frontend_Scripts {
                 // hide order products modal
                 $('.sbwcrma_prod_select_modal_overlay, a.sbwcrma_modal_close').on('click', function(e) {
                     $('.sbwcrma_prod_select_modal_overlay, .sbwcrma_prod_select_modal').hide();
+                    $('.sbwcrma_prod_select_modal').find('a.sbwcrma_submit_return').attr('active', 'no');
                 });
 
                 // submit rma request
                 $('a.sbwcrma_submit_return').each(function() {
                     $(this).on('click', function(e) {
 
-                        // ajax url
-                        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+                        // see which rma request is active before sending, otherwise rma request will be submitted for each of user's orders
+                        if ($(this).attr('active') == 'yes') {
 
-                        // get order id
-                        var order_id = $(this).attr('order-id');
+                            // ajax url
+                            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 
-                        // get rma reason
-                        var rma_reason = $('#sbwcrma_return_reason_' + order_id).val();
+                            // get order id
+                            var order_id = $(this).attr('order-id');
 
-                        // prod data array
-                        var prod_ids = [];
-                        var prod_qtys = [];
+                            // get rma reason
+                            var rma_reason = $('#sbwcrma_return_reason_' + order_id).val();
 
-                        // find checked checkboxes
-                        $('input.sbwcrma_prod_checkbox:checked').each(function() {
-                            var prod_id = $(this).attr('prod-id');
-                            var target = $(this).attr('target');
-                            var qty = $(':selected', target).val();
-                            prod_ids.push(prod_id);
-                            prod_qtys.push(qty);
-                        });
+                            // prod data array
+                            var prod_ids = [];
+                            var prod_qtys = [];
 
-                        // submit via ajax if reason is present, else display error
-                        if (rma_reason) {
-                            var data = {
-                                'action': 'sbwcrma_submit',
-                                'prod_ids': prod_ids,
-                                'prod_qtys': prod_qtys,
-                                'order_id': order_id,
-                                'rma_reason': rma_reason
-                            };
+                            // find checked checkboxes
+                            $('input.sbwcrma_prod_checkbox:checked').each(function() {
+                                var prod_id = $(this).attr('prod-id');
+                                var target = $(this).attr('target');
+                                var qty = $(':selected', target).val();
+                                prod_ids.push(prod_id);
+                                prod_qtys.push(qty);
+                            });
 
-                            $.post(ajaxurl, data, function(response) {
-                                $('table.sbwcrma_prod_select_table, #sbwcrma_submit_returns > div:nth-child(4) > div').hide();
-                                $('p.sbwcrma_instructions').text(response);
-                                $('a.sbwcrma_submit_return').text('<?php pll_e('Understood'); ?>')
-                                $('a.sbwcrma_submit_return').removeClass().addClass('sbwcrma_submit_understood');
-                                $('.sbwcrma_submit_understood').on('click', function(e) {
-                                    e.preventDefault();
+                            // submit via ajax if reason is present, else display error
+                            if (rma_reason) {
+                                var data = {
+                                    'action': 'sbwcrma_submit',
+                                    'prod_ids': prod_ids,
+                                    'prod_qtys': prod_qtys,
+                                    'order_id': order_id,
+                                    'rma_reason': rma_reason
+                                };
+
+                                $.post(ajaxurl, data, function(response) {
+                                    alert(response);
                                     location.reload();
                                 });
-                            });
-                        } else {
-                            $('p.sbwcrma_required').show();
+                            } else {
+                                $('p.sbwcrma_required').show();
+                            }
                         }
-
                     });
                 });
 

@@ -92,6 +92,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                                 $value = $order->data['total'];
                                 $order_id = $order->id;
                                 $date = get_post_field('post_date', $order_id);
+                                // delete_post_meta($order_id, 'sbwcrma_request_submitted');
                             ?>
                                 <tr class="sbwcrma_order_data">
                                     <td><?php echo $order_id; ?></td>
@@ -228,7 +229,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                         'sbwcrma_customer_location' => $shipp_address,
                         'sbwcrma_reason' => $rma_reason,
                         'sbwcrma_products' => maybe_serialize($combined),
-                        'sbwcrma_status' => 'Pending'
+                        'sbwcrma_status' => 'pending'
                     ]
                 ]);
 
