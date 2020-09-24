@@ -6,6 +6,8 @@
 
 class SBWC_Admin {
 
+   use SBWCRMA_Admin_Modals;
+
    /**
     * Class init
     */
