@@ -144,8 +144,8 @@ class SBWCRMA_Frontend_Scripts {
                         };
 
                         $.post(ajaxurl, data, function(response) {
-                           alert(response);
-                           location.reload();
+                            alert(response);
+                            location.reload();
                         });
                     }
                 });
@@ -278,9 +278,9 @@ class SBWCRMA_Frontend_Scripts {
 
             span.sbwcrma_submitted {
                 display: block;
-                background: lightgreen;
+                background: green;
                 padding: 5px;
-                color: #333;
+                color: white;
             }
 
             p.sbwcrma_list {

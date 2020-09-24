@@ -252,12 +252,19 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
             $shiptrack_added = update_post_meta($rma_id, 'sbwcrma_tracking_no', $shiptrack);
             $status_updated = update_post_meta($rma_id, 'sbwcrma_status', 'items shipped');
 
+            // email vars
+            $rma_admin_link = admin_url('post.php?post=' . $rma_id . '&action=edit');
+            $admin_emails = get_option('sbwcrma_emails');
+            $headers = ['Content-Type: text/html; charset=UTF-8'];
+            $message = pll__('Good day<br> RMA with ID' . $rma_id . ' has been shipped.<br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
+            $message .= pll__('<br><br><a target="_blank" href="' . $rma_admin_link . '">View RMA data</a>');
+
             if ($shipco_added || $shiptrack_added || $status_updated) {
                 pll_e('Shipping data updated. Thank you.');
+                wp_mail($admin_emails, pll__('RMA shipped'), $message, $headers);
             } else {
                 pll_e('Could not update shipping data. Please reload the page and try again.');
             }
-            
         }
         wp_die();
     }

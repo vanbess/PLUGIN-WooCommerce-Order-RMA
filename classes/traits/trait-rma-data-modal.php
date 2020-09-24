@@ -105,7 +105,7 @@ trait SBWCRMA_Data_Modal {
             // check rma status; if 'instructions sent', display button for user to add shipping details for package
             $rma_status = get_post_meta($rma_id, 'sbwcrma_status', true);
 
-            if ($rma_status == 'instructions sent' && get_post_meta($rma_id, 'sbwcrma_warehouse', true)) { ?>
+            if ($rma_status == 'instructions sent' && get_post_meta($rma_id, 'sbwcrma_warehouse', true) && !get_post_meta($rma_id, 'sbwcrma_shipping_co', true)) { ?>
                 <a class="sbwcrma_submit_ship_data" href="javascript:void(0)"><?php pll_e('Already shipped? Submit shipping data'); ?></a>
 
                 <div class="sbwcrma_ship_data" style="display: none;">
