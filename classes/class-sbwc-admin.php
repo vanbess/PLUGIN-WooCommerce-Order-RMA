@@ -186,6 +186,14 @@ class SBWC_Admin {
          self::rma_instructions();
          ?>
 
+         <!-- review rma request -->
+         <a id="sbwcrma_review" href="javascript:void(0)"><?php pll_e('Mark RMA as received/being reviewed'); ?></a>
+
+         <?php
+         // rma review modal
+         self::reviewing_rma();
+         ?>
+
          <!-- approve rma request -->
          <a id="sbwcrma_approve" href="javascript:void(0)"><?php pll_e('Approve RMA Request'); ?></a>
 
@@ -322,15 +330,24 @@ class SBWC_Admin {
 
             });
 
+            // mark rma as received/under review
+            $('a#sbwcrma_review').click(function(e) {
+               e.preventDefault();
+               $('div#sbwcrma_review_overlay, div#sbwcrma_review_modal').show();
+
+            });
+
             // approve rma
             $('a#sbwcrma_approve').click(function(e) {
                e.preventDefault();
+               $('div#sbwcrma_approve_overlay, div#sbwcrma_approve_modal').show();
 
             });
 
             // reject rma
             $('a#sbwcrma_reject').click(function(e) {
                e.preventDefault();
+               $('div#sbwcrma_reject_overlay, div#sbwcrma_reject_modal').show();
 
             });
 
@@ -450,11 +467,11 @@ class SBWC_Admin {
 
          div#sbwcrma_actions a {
             display: inline-block;
-            width: 33%;
+            width: 24.8%;
             text-align: center;
             background: #007cba;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             text-decoration: none;
             line-height: 2.5;
             border-radius: 3px;
@@ -505,13 +522,26 @@ class SBWC_Admin {
             right: 10px;
             top: 10px;
             text-align: center !important;
-            line-height: 0.95 !important;
+            line-height: 1.13 !important;
             background: lightgray !important;
             color: grey !important;
          }
 
-         a.sbwcrma_send_instructions {
+         a.sbwcrma_send_instructions,
+         a.sbwcrma_review, a.sbwcrma_approve,
+         a.sbwcrma_reject          {
             width: 100% !important;
+         }
+
+         a.sbwcrma_reject{
+            background: #ca4a1f !important;
+         }
+
+         p.sbwcrma_done {
+            font-size: 15px;
+            text-align: center;
+            background: #efefef;
+            padding: 15px;
          }
       </style>
 
