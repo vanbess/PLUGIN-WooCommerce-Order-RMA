@@ -139,7 +139,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
                 if ($rmas->have_posts()) { ?>
 
                     <p class="sbwcrma_list">
-                        <?php pll_e('Below is a list of returns you have submitted.'); ?>
+                        <?php pll_e('Below is a list of returns you have submitted.<br><br> If you have already shipped a return, click on the View Details link to add the associated shipping data (shipping company and package tracking number) so that our staff members can keep track of the progress of your return.'); ?>
                     </p>
 
                     <table>
@@ -256,8 +256,9 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
             // email vars
             $rma_admin_link = admin_url('post.php?post=' . $rma_id . '&action=edit');
             $admin_emails = get_option('sbwcrma_emails');
-            $headers = ['Content-Type: text/html; charset=UTF-8'];
-            $message = pll__('Good day<br> RMA with ID' . $rma_id . ' has been shipped.<br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
+            $headers[] = 'Content-Type: text/html; charset=UTF-8';
+            $headers[] = 'From: Chicnmix Website';
+            $message = pll__('Good day<br> RMA with ID' . $rma_id . ' has been shipped.<br><br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
             $message .= pll__('<br><br><a target="_blank" href="' . $rma_admin_link . '">View RMA data</a>');
 
             if ($shipco_added || $shiptrack_added || $status_updated) {

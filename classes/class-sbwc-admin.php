@@ -41,7 +41,15 @@ class SBWC_Admin {
             <label class="sbwcrma_admin_labels" for="sbwcrma_emails">
                <?php pll_e('List of email addresses, separated by commas, to which RMA submission emails should be sent:'); ?>
             </label>
-            <input value="<?php print get_option('sbwcrma_emails'); ?>" type="text" name="sbwcrma_emails" id="sbwcrma_emails" placeholder="<?php pll_e('email address 1, email address 2 etc'); ?>">
+            <input value="<?php print get_option('sbwcrma_emails'); ?>" type="text" id="sbwcrma_emails" placeholder="<?php pll_e('email address 1, email address 2 etc'); ?>">
+         </div>
+
+         <!-- from email address -->
+         <div class="sbwcrma_input_cont">
+            <label class="sbwcrma_admin_labels" for="sbwcrma_email_from">
+               <?php pll_e('The email address or addresses all RMA related emails will originate from:'); ?>
+            </label>
+            <input value="<?php print get_option('sbwcrma_emails_from'); ?>" type="text" id="sbwcrma_emails_from" placeholder="<?php pll_e('email address 1, email address 2 etc'); ?>">
          </div>
 
          <!-- save settings -->
@@ -52,7 +60,7 @@ class SBWC_Admin {
       </div>
 
    <?php
-      wp_enqueue_script('rma_rma_settings_js');
+      wp_enqueue_script('rma_settings_js');
    }
 
    /**
@@ -153,7 +161,7 @@ class SBWC_Admin {
 
                // loop through rma products
                foreach ($rma_prods as $prod_id => $qty) {
-                  ?>
+               ?>
                   <tr>
                      <td><?php echo $prod_id; ?></td>
                      <td><?php echo get_the_title($prod_id); ?></td>
@@ -173,11 +181,26 @@ class SBWC_Admin {
             <?php pll_e('Send RMA Instructions'); ?>
          </a>
 
+         <?php
+         // instructions modal
+         self::rma_instructions();
+         ?>
+
          <!-- approve rma request -->
          <a id="sbwcrma_approve" href="javascript:void(0)"><?php pll_e('Approve RMA Request'); ?></a>
 
+         <?php
+         // rma approve modal
+         self::approve_rma();
+         ?>
+
          <!-- reject rma with reasons -->
          <a id="sbwcrma_reject" href="javascript:void(0)"><?php pll_e('Reject RMA Request'); ?></a>
+
+         <?php
+         // rma reject modal
+         self::reject_rma();
+         ?>
 
       </div>
 
@@ -194,11 +217,11 @@ class SBWC_Admin {
    public static function rma_data_save($post_id, $post) {
       if ($post->post_type == 'rma') {
          // shipping warehouse
-         if(isset($_POST['sbwcrma_warehouse'])){
+         if (isset($_POST['sbwcrma_warehouse'])) {
             update_post_meta($post_id, 'sbwcrma_warehouse', $_POST['sbwcrma_warehouse']);
          }
          // rma status
-         if(isset($_POST['sbwcrma_status'])){
+         if (isset($_POST['sbwcrma_status'])) {
             update_post_meta($post_id, 'sbwcrma_status', $_POST['sbwcrma_status']);
          }
       }
@@ -225,21 +248,18 @@ class SBWC_Admin {
 
                // get data to submit
                var emails = $('input#sbwcrma_emails').val();
-               var instructions = $('textarea#sbwcrma_instr_email').val();
-               var approval = $('textarea#sbwcrma_accept_email').val();
-               var rejection = $('textarea#sbwcrma_reject_email').val();
+               var emails_from = $('input#sbwcrma_emails_from').val();
 
                var data = {
                   'action': 'rma_ajax',
-                  'sbwrma_emails': emails,
-                  'sbwcrma_instr_email': instructions,
-                  'sbwcrma_accept_email': approval,
-                  'sbwcrma_reject_email': rejection
+                  'sbwcrma_emails': emails,
+                  'sbwcrma_emails_from': emails_from
                };
 
                $.post(ajaxurl, data, function(response) {
                   // console.log(response);
                   alert(response);
+                  location.reload();
                });
             });
          });
@@ -255,51 +275,70 @@ class SBWC_Admin {
       <script>
          jQuery(document).ready(function($) {
 
-            // send rma instructions
-            $('a#sbwcrma_send_instructions').on('click', function(e) {
-               e.preventDefault();
-
-               var data = {
-                  'action': 'rma_ajax',
-                  'send_instructions': true
-               };
-
-               $.post(ajaxurl, data, function(response) {
-
-               });
-            });
-
-            // reject rma request
-            $('a#sbwcrma_reject').on('click', function(e) {
-               e.preventDefault();
-
-               var data = {
-                  'action': 'rma_ajax',
-                  'reject_rma': '<?php echo get_the_ID(); ?>'
-               };
-
-               $.post(ajaxurl, data, function(response) {
-
-               });
-            });
-
-            // approve rma request
-            $('a#sbwcrma_approve').on('click', function(e) {
-               e.preventDefault();
-
-               var data = {
-                  'action': 'rma_ajax',
-                  'approve_rma': '<?php echo get_the_ID(); ?>'
-               };
-
-               $.post(ajaxurl, data, function(response) {
-
-               });
-            });
-
             // set rma status
             var rma_status = '<?php echo get_post_meta(get_the_ID(), 'sbwcrma_status', true); ?>';
             $('#sbwcrma_status').val(rma_status);
+
+            // RMA actions: send instructions, approve rma or reject rma
+            $('a#sbwcrma_send_instructions').click(function(e) {
+               e.preventDefault();
+
+               var whouse = $('input#sbwcrma_warehouse').val();
+
+               if (whouse) {
+                  $('div#sbwcrma_instructions_overlay, div#sbwcrma_instructions_modal').show();
+                  $('input#sbwcrma_warehouse').val(whouse);
+
+                  $('a.sbwcrma_send_instructions').click(function(e) {
+                     e.preventDefault();
+
+                     var instructions = $('textarea#sbwcrma_instructions').val();
+                     var rma_id = $(this).attr('rma-id');
+
+                     if (instructions) {
+
+                        var data = {
+                           'action': 'rma_ajax',
+                           'rma_id': rma_id,
+                           'whouse': whouse,
+                           'instr': instructions
+                        };
+
+                        $.post(ajaxurl, data, function(response) {
+                           alert(response);
+                           location.reload();
+                        });
+
+                     } else {
+                        alert('<?php pll_e('Please enter instructions to the client!'); ?>')
+                     }
+
+                  });
+
+               } else {
+                  alert('<?php pll_e('Destination warehouse is required!'); ?>');
+               }
+
+
+            });
+
+            // approve rma
+            $('a#sbwcrma_approve').click(function(e) {
+               e.preventDefault();
+
+            });
+
+            // reject rma
+            $('a#sbwcrma_reject').click(function(e) {
+               e.preventDefault();
+
+            });
+
+            // close rma admin modals
+            $('a.sbwcrma_admin_modal_close, .sbwcrma_admin_overlay').click(function(e) {
+               e.preventDefault();
+               $('.sbwcrma_admin_overlay, .sbwcrma_admin_modal').hide();
+            });
 
          });
       </script>
@@ -320,7 +359,8 @@ class SBWC_Admin {
             padding: 7px 2px;
          }
 
-         input#sbwcrma_emails {
+         input#sbwcrma_emails,
+         input#sbwcrma_emails_from {
             display: block;
             width: 100%;
             margin-bottom: 15px;
@@ -433,6 +473,46 @@ class SBWC_Admin {
             font-size: 14px;
             background: #eeeeee;
          }
+
+         /* modals/lightboxes */
+         .sbwcrma_admin_overlay {
+            position: fixed;
+            z-index: 1000;
+            width: 100vw;
+            height: 100vh;
+            background: #0000004a;
+            top: 0;
+            left: 0;
+         }
+
+         .sbwcrma_admin_modal {
+            position: absolute;
+            width: 50vw;
+            min-width: 360px;
+            top: 0;
+            background: white;
+            z-index: 1001;
+            padding: 30px;
+            border-radius: 4px;
+            left: 17vw;
+         }
+
+         a.sbwcrma_admin_modal_close {
+            width: 20px !important;
+            height: 20px;
+            border-radius: 50% !important;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            text-align: center !important;
+            line-height: 0.95 !important;
+            background: lightgray !important;
+            color: grey !important;
+         }
+
+         a.sbwcrma_send_instructions {
+            width: 100% !important;
+         }
       </style>
 
 <?php }
@@ -443,22 +523,56 @@ class SBWC_Admin {
    public static function rma_ajax() {
 
       // save rma settings
-      if (isset($_POST['sbwrma_emails'])) {
+      if (isset($_POST['sbwcrma_emails'])) {
 
-         $emails_saved = add_option('sbwcrma_emails', $_POST['sbwrma_emails']);
-         $instructions_saved = add_option('sbwcrma_instr_email', $_POST['sbwcrma_instr_email']);
-         $accept_email_saved = add_option('sbwcrma_accept_email', $_POST['sbwcrma_accept_email']);
-         $reject_email_saved = add_option('sbwcrma_reject_email', $_POST['sbwcrma_reject_email']);
+         // print_r($_POST);
 
-         if ($emails_saved || $instructions_saved || $accept_email_saved || $reject_email_saved) {
-            pll_e('RMA settings saved successfully');
+         $emails_saved = update_option('sbwcrma_emails', $_POST['sbwcrma_emails']);
+         $from_emails_saved = update_option('sbwcrma_emails_from', $_POST['sbwcrma_emails_from']);
+
+         if ($emails_saved || $from_emails_saved) {
+            pll_e('RMA settings saved successfully.');
          } else {
             pll_e('RMA settings could not be saved. Please reload the page and try again.');
          }
       }
 
       // send rma instructions email
-      if (isset($_POST['send_instructions'])) {
+      if (isset($_POST['instr'])) {
+
+         // post data
+         $instructions = $_POST['instr'];
+         $rma_id = $_POST['rma_id'];
+         $whouse = $_POST['whouse'];
+
+         // update post meta
+         $status_updated = update_post_meta($rma_id, 'sbwcrma_status', 'instructions sent');
+         $whouse_updated = update_post_meta($rma_id, 'sbwcrma_warehouse', $whouse);
+         $insructions_updated = update_post_meta($rma_id, 'sbwcrma_instructions', $instructions);
+
+         // email data
+         $user_name = get_post_meta($rma_id, 'sbwcrma_user_name', true);
+         $user_email = get_post_meta($rma_id, 'sbwcrma_user_email', true);
+         $from_name = get_bloginfo('name');
+         $subject = pll__('Important RMA instructions');
+         $from = get_option('sbwcrma_emails_from');
+         $message = "Good day $user_name<br><br>";
+         $message .= "<b>Instructions for further processing of your return follows.</b><br><br>";
+         $message .= "<b>Your return needs to be shipped to: $whouse</b><br><br>";
+         $message .= $instructions . "<br><br>";
+         $message .= "If you have any questions or concerns please do not hesitate to contact us by responding to this email.<br><br>";
+         $message .= "You can submit shipping data for your return via your accounts dashboard.<br><br>";
+         $message .= "Regards, <br><br>$from_name";
+         $headers[] = "From: $from_name <$from>";
+         $headers[] = "Content-Type: text/html; charset=UTF-8";
+
+         // send email if post meta updated successfully
+         if ($status_updated || $whouse_updated || $insructions_updated) {
+            wp_mail($user_email, $subject, $message, $headers);
+            pll_e('Instructions successfully sent.');
+         } else {
+            pll_e('Could not process your request. Please reload the page and try again.');
+         }
       }
 
       // approve rma

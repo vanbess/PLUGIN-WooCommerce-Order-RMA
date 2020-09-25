@@ -288,6 +288,7 @@ class SBWCRMA_Frontend_Scripts {
                 text-align: center;
                 margin-bottom: 30px;
                 border: 1px solid #e6e6e6;
+                padding: 15px;
             }
 
             div#sbwcrma_submitted_returns table tr td,
