@@ -14,12 +14,14 @@ trait SBWCRMA_Admin_Modals {
 
         <!-- data -->
         <div class="sbwcrma_admin_modal" id="sbwcrma_instructions_modal" style="display:none;">
+
             <!-- modal close -->
             <a class="sbwcrma_admin_modal_close" href="javascript:void(0)">x</a>
 
             <!-- message/instructions -->
             <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'pending') { ?>
 
+                <h1><?php pll_e('Send RMA instructions to client'); ?></h1>
                 <!-- ship to warehouse -->
                 <label for="sbwcrma_warehouse"><?php pll_e('Ship to warehouse:'); ?></label>
                 <input id="sbwcrma_warehouse" type="text" value="" readonly>
@@ -27,7 +29,7 @@ trait SBWCRMA_Admin_Modals {
                 <label for="sbwcrma_instructions"><?php pll_e('Instructions to client:'); ?></label>
                 <textarea id="sbwcrma_instructions" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
                 <a class="sbwcrma_send_instructions" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Send instructions'); ?></a>
-                
+
             <?php } else { ?>
                 <p class="sbwcrma_done"><?php pll_e('Instructions have already been sent to this client.'); ?></p>
             <?php } ?>
@@ -44,14 +46,20 @@ trait SBWCRMA_Admin_Modals {
 
         <!-- data -->
         <div class="sbwcrma_admin_modal" id="sbwcrma_review_modal" style="display:none;">
+
             <!-- modal close -->
             <a class="sbwcrma_admin_modal_close" href="javascript:void(0)">x</a>
 
-            <!-- approval message to client (optional at this stage) -->
-            <label for="sbwcrma_review_message"><?php pll_e('Message to client (optional):'); ?></label>
-            <textarea id="sbwcrma_review_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
+            <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'items received - pending inspection') { ?>
+                <p class="sbwcrma_done"><?php pll_e('RMA under review notification has already been sent to this client.'); ?></p>
+            <?php } else { ?>
+                <h1><?php pll_e('Send RMA received and being reviewed notification'); ?></h1>
+                <!-- approval message to client (optional at this stage) -->
+                <label for="sbwcrma_review_message"><?php pll_e('Message to client (optional):'); ?></label>
+                <textarea id="sbwcrma_review_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
+                <a class="sbwcrma_review" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Send RMA under review message to client'); ?></a>
+            <?php } ?>
 
-            <a class="sbwcrma_review" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Send RMA under review message to client'); ?></a>
         </div>
 
     <?php }
@@ -66,14 +74,19 @@ trait SBWCRMA_Admin_Modals {
 
         <!-- data -->
         <div class="sbwcrma_admin_modal" id="sbwcrma_approve_modal" style="display:none;">
+
             <!-- modal close -->
             <a class="sbwcrma_admin_modal_close" href="javascript:void(0)">x</a>
 
-            <!-- approval message to client (optional at this stage) -->
-            <label for="sbwcrma_approval_message"><?php pll_e('Message to client (optional):'); ?></label>
-            <textarea id="sbwcrma_approval_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
-
-            <a class="sbwcrma_approve" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Approve RMA'); ?></a>
+            <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'approved') { ?>
+                <p class="sbwcrma_done"><?php pll_e('RMA approval notification has already been sent to this client.'); ?></p>
+            <?php } else { ?>
+                <h1><?php pll_e('Approve RMA'); ?></h1>
+                <!-- approval message to client (optional at this stage) -->
+                <label for="sbwcrma_approval_message"><?php pll_e('Message to client (optional):'); ?></label>
+                <textarea id="sbwcrma_approval_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
+                <a class="sbwcrma_approve" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Approve RMA'); ?></a>
+            <?php } ?>
         </div>
 
     <?php }
@@ -88,14 +101,19 @@ trait SBWCRMA_Admin_Modals {
 
         <!-- data -->
         <div class="sbwcrma_admin_modal" id="sbwcrma_reject_modal" style="display:none;">
+
             <!-- modal close -->
             <a class="sbwcrma_admin_modal_close" href="javascript:void(0)">x</a>
 
-            <!-- rejection message to client (required at this stage) -->
-            <label for="sbwcrma_rejection_message"><?php pll_e('Message to client (required):'); ?></label>
-            <textarea id="sbwcrma_rejection_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
-
-            <a class="sbwcrma_reject" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Reject RMA'); ?></a>
+            <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'rejected') { ?>
+                <p class="sbwcrma_done"><?php pll_e('RMA approval notification has already been sent to this client.'); ?></p>
+            <?php } else { ?>
+                <h1><?php pll_e('Reject RMA'); ?></h1>
+                <!-- rejection message to client (required at this stage) -->
+                <label for="sbwcrma_rejection_message"><?php pll_e('Message to client (required):'); ?></label>
+                <textarea id="sbwcrma_rejection_message" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
+                <a class="sbwcrma_reject" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Reject RMA'); ?></a>
+            <?php } ?>
         </div>
 <?php }
 }

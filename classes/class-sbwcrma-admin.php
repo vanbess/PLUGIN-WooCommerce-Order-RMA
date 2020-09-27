@@ -335,12 +335,48 @@ class SBWC_Admin {
                e.preventDefault();
                $('div#sbwcrma_review_overlay, div#sbwcrma_review_modal').show();
 
+               $('a.sbwcrma_review').click(function(e) {
+                  e.preventDefault();
+                  var rma_id = $(this).attr('rma-id');
+                  var msg = $('textarea#sbwcrma_review_message').val();
+
+                  var data = {
+                     'action': 'rma_ajax',
+                     'under_review': true,
+                     'review_msg': msg,
+                     'rma_id': rma_id
+                  };
+                  $.post(ajaxurl, data, function(response) {
+                     alert(response);
+                     location.reload();
+                  });
+
+               });
+
             });
 
             // approve rma
             $('a#sbwcrma_approve').click(function(e) {
                e.preventDefault();
                $('div#sbwcrma_approve_overlay, div#sbwcrma_approve_modal').show();
+
+               $('a.sbwcrma_approve').click(function(e) {
+                  e.preventDefault();
+
+                  var rma_id = $(this).attr('rma-id');
+                  var msg = $('textarea#sbwcrma_approval_message').val();
+
+                  var data = {
+                     'action': 'rma_ajax',
+                     'approve_rma': true,
+                     'rma_id': rma_id,
+                     'approve_msg': msg
+                  };
+                  $.post(ajaxurl, data, function(response) {
+                     alert(response);
+                     location.reload();
+                  });
+               });
 
             });
 
@@ -349,6 +385,27 @@ class SBWC_Admin {
                e.preventDefault();
                $('div#sbwcrma_reject_overlay, div#sbwcrma_reject_modal').show();
 
+               $('a.sbwcrma_reject').click(function(e) {
+                  e.preventDefault();
+
+                  var rma_id = $(this).attr('rma-id');
+                  var msg = $('#sbwcrma_rejection_message').val();
+
+                  if (!msg) {
+                     alert('<?php pll_e('A reason for the rejection of this RMA is required!'); ?>');
+                  } else {
+                     var data = {
+                        'action': 'rma_ajax',
+                        'reject_rma': true,
+                        'reject_msg': msg,
+                        'rma_id': rma_id
+                     };
+                     $.post(ajaxurl, data, function(response) {
+                        alert(response);
+                        location.reload();
+                     });
+                  }
+               });
             });
 
             // close rma admin modals
@@ -528,12 +585,13 @@ class SBWC_Admin {
          }
 
          a.sbwcrma_send_instructions,
-         a.sbwcrma_review, a.sbwcrma_approve,
-         a.sbwcrma_reject          {
+         a.sbwcrma_review,
+         a.sbwcrma_approve,
+         a.sbwcrma_reject {
             width: 100% !important;
          }
 
-         a.sbwcrma_reject{
+         a.sbwcrma_reject {
             background: #ca4a1f !important;
          }
 
@@ -542,6 +600,11 @@ class SBWC_Admin {
             text-align: center;
             background: #efefef;
             padding: 15px;
+         }
+
+         .sbwcrma_admin_modal>h1 {
+            margin-bottom: 20px !important;
+            padding-left: 5px !important;
          }
       </style>
 
@@ -605,12 +668,108 @@ class SBWC_Admin {
          }
       }
 
+      // rma under review
+      if (isset($_POST['under_review'])) {
+
+         // post vars
+         $msg = $_POST['review_msg'];
+         $rma_id = $_POST['rma_id'];
+
+         // user vars
+         $name = get_post_meta($rma_id, 'sbwcrma_user_name', true);
+         $to_mail = get_post_meta($rma_id, 'sbwcrma_user_email', true);
+         $from_name = get_bloginfo('name');
+         $from_mail = get_option('sbwcrma_emails_from');
+
+         // mail vars
+         $subject = 'Your return has been received and is under review';
+         $message = "Good day $name<br><br>";
+         $message .= "<b>We have received your return and are currently reviewing it.</b><br><br>";
+         if ($msg) {
+            $message .= "<b>Message from admin:</b> $msg<br><br>";
+         }
+         $message .= 'Once this process has been completed you will be informed of the outcome.<br><br>';
+         $message .= "Regards,<br> $from_name";
+         $headers[] = "From: $from_name <$from_mail>";
+         $headers[] = "Content-Type: text/html; charset=UTF-8";
+
+         // update rma meta and send mail if successfull
+         $status_changed = update_post_meta($rma_id, 'sbwcrma_status', 'items received - pending inspection');
+
+         if ($status_changed) {
+            wp_mail($to_mail, $subject, $message, $headers);
+            pll_e('Your request has been processed.');
+         } else {
+            pll_e('Could not process your request. Please reload the page and try again.');
+         }
+      }
+
       // approve rma
       if (isset($_POST['approve_rma'])) {
+         // post vars
+         $msg = $_POST['approve_msg'];
+         $rma_id = $_POST['rma_id'];
+
+         // user vars
+         $name = get_post_meta($rma_id, 'sbwcrma_user_name', true);
+         $to_mail = get_post_meta($rma_id, 'sbwcrma_user_email', true);
+         $from_name = get_bloginfo('name');
+         $from_mail = get_option('sbwcrma_emails_from');
+
+         // mail vars
+         $subject = 'Your return has been approved';
+         $message = "Good day $name<br><br>";
+         $message .= "<b>We are happy to inform you that your return has been approved.</b><br><br>";
+         if ($msg) {
+            $message .= "<b>Message from admin:</b> $msg <br><br>";
+         }
+         $message .= 'If required, one of our staff members will be in touch with further instructions.<br><br>';
+         $message .= "Regards,<br> $from_name";
+         $headers[] = "From: $from_name <$from_mail>";
+         $headers[] = "Content-Type: text/html; charset=UTF-8";
+
+         // update rma meta and send mail if successfull
+         $status_changed = update_post_meta($rma_id, 'sbwcrma_status', 'approved');
+
+         if ($status_changed) {
+            wp_mail($to_mail, $subject, $message, $headers);
+            pll_e('Your request has been processed.');
+         } else {
+            pll_e('Could not process your request. Please reload the page and try again.');
+         }
       }
 
       // reject rma
       if (isset($_POST['reject_rma'])) {
+         // post vars
+         $msg = $_POST['reject_msg'];
+         $rma_id = $_POST['rma_id'];
+
+         // user vars
+         $name = get_post_meta($rma_id, 'sbwcrma_user_name', true);
+         $to_mail = get_post_meta($rma_id, 'sbwcrma_user_email', true);
+         $from_name = get_bloginfo('name');
+         $from_mail = get_option('sbwcrma_emails_from');
+
+         // mail vars
+         $subject = 'Your return has been rejected';
+         $message = "Good day $name<br><br>";
+         $message .= "<b>Unfortunately your request for return has been rejected.</b><br><br>";
+         $message .= "<b>Message from admin:</b> $msg <br><br>";
+         $message .= 'If you have any queries please feel free to contact us.<br><br>';
+         $message .= "Regards,<br> $from_name";
+         $headers[] = "From: $from_name <$from_mail>";
+         $headers[] = "Content-Type: text/html; charset=UTF-8";
+
+         // update rma meta and send mail if successfull
+         $status_changed = update_post_meta($rma_id, 'sbwcrma_status', 'rejected');
+
+         if ($status_changed) {
+            wp_mail($to_mail, $subject, $message, $headers);
+            pll_e('Your request has been processed.');
+         } else {
+            pll_e('Could not process your request. Please reload the page and try again.');
+         }
       }
 
       wp_die();

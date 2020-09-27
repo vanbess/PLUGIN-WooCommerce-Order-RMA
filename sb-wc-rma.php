@@ -27,12 +27,12 @@ function sbwcrma_init() {
 
     // admin class
     require_once SBWCRMA_PATH . 'classes/traits/trait-admin-modals.php';
-    require_once SBWCRMA_PATH . 'classes/class-sbwc-admin.php';
+    require_once SBWCRMA_PATH . 'classes/class-sbwcrma-admin.php';
 
     // class front
     require_once SBWCRMA_PATH . 'classes/traits/trait-product-select-modal.php';
     require_once SBWCRMA_PATH . 'classes/traits/trait-rma-data-modal.php';
-    require_once SBWCRMA_PATH . 'classes/assets/class-sbwc-frontend-scripts.php';
+    require_once SBWCRMA_PATH . 'classes/assets/class-sbwcrma-frontend-scripts.php';
 
     // enqueue frontend js and css
     add_action('wp_footer', 'sbwcrma_front_scripts');
@@ -42,5 +42,5 @@ function sbwcrma_init() {
         wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css());
     }
 
-    require_once SBWCRMA_PATH . 'classes/class-sbwc-front.php';
+    require_once SBWCRMA_PATH . 'classes/class-sbwcrma-front.php';
 }
