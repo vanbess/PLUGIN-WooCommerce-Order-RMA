@@ -1,0 +1,26 @@
+p.sbwcrma_noreg_note {
+    background: #efefef;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+div#sbwcrma_noreg_label, div#sbcrma_noreg_submit {
+    width: 20%;
+    float: left;
+}
+
+div#sbwcrma_noreg_input {
+    width: 60%;
+    float: left;
+}
+
+div#sbwcrma_noreg_label label {position: relative;top: 7px;font-size: 16px;}
+
+div#sbcrma_noreg_submit > a {
+    display: block;
+    background: #0073aa;
+    color: white;
+    font-weight: 600;
+    line-height: 2.45;
+    text-transform: uppercase;
+}

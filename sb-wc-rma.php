@@ -43,4 +43,7 @@ function sbwcrma_init() {
     }
 
     require_once SBWCRMA_PATH . 'classes/class-sbwcrma-front.php';
+
+    // shortcode
+    require_once SBWCRMA_PATH. 'sc/sbwcrma-shortcode.php';
 }
