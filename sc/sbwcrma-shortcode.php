@@ -14,27 +14,51 @@ function sbwcrma_sc() {
         wp_redirect('my-account');
     } else { ?>
         <div id="sbwcrma_noreg_email_input">
+
             <p class="sbwcrma_noreg_note">
                 <?php pll_e('Looking to return an item or items? You can begin the process by entering your email address below so that we can retrieve a list of orders you have placed with us.'); ?>
             </p>
 
-            <form action="" method="get">
+            <form id="sbwcrma_noreg_email_form" action="" method="get">
                 <div id="sbwcrma_noreg_label">
                     <label for="sbwcrma_noreg_email"><?php pll_e('Your email address:'); ?></label>
                 </div>
                 <div id="sbwcrma_noreg_input">
-                    <input type="email" name="sbwcrma_noreg_email" placeholder="your@email.com">
+                    <input type="email" name="sbwcrma_noreg_email" placeholder="your@email.com" required>
                 </div>
                 <div id="sbcrma_noreg_submit">
-                    <a href="javascript:void(0)" type="submit"><?php pll_e('Submit'); ?></a>
+                    <button type="submit">Submit</button>
                 </div>
             </form>
         </div>
-<?php }
+        <?php
+    
+    print '<pre>';
+    print_r($_GET);
+    print '</pre>';
+    
+    }
 
     /*check submitted email address against registered email addresses; 
 /*if found, redirect user to my account/login page, else retrieve orders tied to email address*/
     if (isset($_GET['sbwcrma_noreg_email'])) {
-        print $_GET['sbwcrma_noreg_email'];
+
+        // get submitted email address
+        $usermail = $_GET['sbwcrma_noreg_email'];
+
+        // get orders by billing_email
+        $orders = wc_get_orders([
+            'billing_email' => $usermail,
+            'limit' => -1,
+            'status' => 'completed'
+        ]);
+
+        // only go further if orders actually present for email address
+        if (!empty($orders) && is_array($orders) || is_object($orders)) {
+        } else { ?>
+            <p class="sbwcrma_noreg_note">
+                <?php pll_e('No orders were found for the supplied email address. Please make sure you have entered the correct email address and try again.'); ?>
+            </p>
+<?php }
     }
 }

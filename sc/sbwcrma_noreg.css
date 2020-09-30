@@ -1,3 +1,11 @@
+div#sbwcrma_noreg_email_input {
+    overflow: auto;
+    width: 50vw;
+    margin: 0 auto;
+    min-width: 360px;
+    padding: 30px 0;
+}
+
 p.sbwcrma_noreg_note {
     background: #efefef;
     padding: 15px;
@@ -23,4 +31,5 @@ div#sbcrma_noreg_submit > a {
     font-weight: 600;
     line-height: 2.45;
     text-transform: uppercase;
+    text-align: center;
 }
