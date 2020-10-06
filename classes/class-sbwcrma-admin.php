@@ -654,7 +654,7 @@ class SBWC_Admin {
          $message .= "<b>Your return needs to be shipped to: $whouse</b><br><br>";
          $message .= $instructions . "<br><br>";
          $message .= "If you have any questions or concerns please do not hesitate to contact us by responding to this email.<br><br>";
-         $message .= "You can submit shipping data for your return via your accounts dashboard.<br><br>";
+         $message .= "You can submit shipping data for your return via your accounts dashboard, or, if you do not have an account, via the return submission page where you originally submitted your return request.<br><br>";
          $message .= "Regards, <br><br>$from_name";
          $headers[] = "From: $from_name <$from>";
          $headers[] = "Content-Type: text/html; charset=UTF-8";

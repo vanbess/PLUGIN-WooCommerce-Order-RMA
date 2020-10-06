@@ -19,7 +19,7 @@ class SBWCRMA_Frontend_Scripts {
                     $(this).addClass('sbwcrma_active');
                     $('a#sbwcrma_returns_show').removeClass('sbwcrma_active');
                     $('div#sbwcrma_submit_returns').show();
-                    $('div#sbwcrma_submitted_returns').hide();
+                    $('div#sbwcrma_submitted_returns, div#sbwcrma_submitted_returns_no_reg').hide();
                 });
 
                 // show returns list
@@ -28,7 +28,7 @@ class SBWCRMA_Frontend_Scripts {
                     $(this).addClass('sbwcrma_active');
                     $('a#sbwcrma_submit_show').removeClass('sbwcrma_active');
                     $('div#sbwcrma_submit_returns').hide();
-                    $('div#sbwcrma_submitted_returns').show();
+                    $('div#sbwcrma_submitted_returns, div#sbwcrma_submitted_returns_no_reg').show();
                 });
 
                 // show order products modal
@@ -42,7 +42,7 @@ class SBWCRMA_Frontend_Scripts {
                             var modal_order_id = $(this).attr('order-id');
                             if (order_id == modal_order_id) {
                                 $(this).show();
-                                $(this).find('a.sbwcrma_submit_return').attr('active', 'yes');
+                                $(this).find('a.sbwcrma_submit_return, a.sbwcrma_submit_return_no_reg').attr('active', 'yes');
                             }
                         });
 
@@ -52,11 +52,11 @@ class SBWCRMA_Frontend_Scripts {
                 // hide order products modal
                 $('.sbwcrma_prod_select_modal_overlay, a.sbwcrma_modal_close').on('click', function(e) {
                     $('.sbwcrma_prod_select_modal_overlay, .sbwcrma_prod_select_modal').hide();
-                    $('.sbwcrma_prod_select_modal').find('a.sbwcrma_submit_return').attr('active', 'no');
+                    $('.sbwcrma_prod_select_modal').find('a.sbwcrma_submit_return, a.sbwcrma_submit_return_no_reg').attr('active', 'no');
                 });
 
                 // submit rma request
-                $('a.sbwcrma_submit_return').each(function() {
+                $('a.sbwcrma_submit_return, a.sbwcrma_submit_return_no_reg').each(function() {
                     $(this).on('click', function(e) {
 
                         // see which rma request is active before sending, otherwise rma request will be submitted for each of user's orders
@@ -455,6 +455,123 @@ class SBWCRMA_Frontend_Scripts {
                 font-weight: 600;
                 background: #efefef;
                 line-height: 2.5;
+            }
+
+            /* NON REGISTERED USERS */
+            div#sbwcrma_noreg_email_input {
+                overflow: auto;
+                width: 50vw;
+                margin: 0 auto;
+                min-width: 360px;
+                padding: 30px 0;
+            }
+
+            p.sbwcrma_noreg_note {
+                background: #efefef;
+                padding: 15px;
+                margin-bottom: 30px;
+            }
+
+            p.sbwcrma_noreg_error {
+                background: #fff3ea;
+                padding: 15px;
+                margin-bottom: 30px;
+                font-weight: bold;
+            }
+
+            div#sbwcrma_noreg_label,
+            div#sbcrma_noreg_submit {
+                width: 20%;
+                float: left;
+            }
+
+            div#sbwcrma_noreg_input {
+                width: 60%;
+                float: left;
+            }
+
+            div#sbwcrma_noreg_label label {
+                position: relative;
+                top: 7px;
+                font-size: 16px;
+            }
+
+            div#sbcrma_noreg_submit>button {
+                color: white;
+                background: #0c0c0c;
+                width: 100%;
+                margin: 0;
+            }
+
+            form#sbwcrma_noreg_email_form {
+                display: block;
+                overflow: auto;
+            }
+
+            div#sbwcrma_noreg_login .button {
+                width: 100%;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg {
+                top: 0;
+                left: 31%;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg th {
+                text-align: center;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg label {
+                text-align: left;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg a {
+                color: white !important;
+                text-decoration: none !important;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg a:first-child {
+                line-height: 1.4;
+            }
+
+            .sbwcrma_prod_select_modal.no_reg td {
+                text-align: center;
+            }
+
+            a.sbwcrma_submit_return_no_reg {
+                display: block;
+                width: 100%;
+                background: #267cc3;
+                color: white;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 2;
+                border-radius: 3px;
+            }
+
+            .sbwcrma_data_modal.no_reg {
+                top: -19%;
+                left: 25vw;
+                text-align: left;
+            }
+
+            .sbwcrma_data_modal.no_reg>h1 {
+                text-align: center;
+            }
+
+            .sbwcrma_data_modal_prods_cont.no_reg>span,
+            .sbwcrma_rma_modal_prod_row.no_reg>span {
+                width: 32.85%;
+            }
+
+            table.sbcrma_rma_data_table_no_reg th,
+            table.sbcrma_rma_data_table_no_reg td {
+                text-align: center;
+            }
+
+            table.sbcrma_rma_data_table_no_reg td a {
+                color: #2675b9;
+                text-decoration: underline;
             }
         </style>
 <?php }

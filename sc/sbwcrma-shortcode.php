@@ -3,106 +3,6 @@
 /** Shortcode to render RMA functionality on the frontend for non-registered buyers/clients */
 add_shortcode('sbwcrma_sc', 'sbwcrma_sc');
 
-/* css */
-add_action('wp_head', 'sbwcrma_noreg_css');
-
-function sbwcrma_noreg_css() { ?>
-    <style>
-        div#sbwcrma_noreg_email_input {
-            overflow: auto;
-            width: 50vw;
-            margin: 0 auto;
-            min-width: 360px;
-            padding: 30px 0;
-        }
-
-        p.sbwcrma_noreg_note {
-            background: #efefef;
-            padding: 15px;
-            margin-bottom: 30px;
-        }
-
-        p.sbwcrma_noreg_error {
-            background: #fff3ea;
-            padding: 15px;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        div#sbwcrma_noreg_label,
-        div#sbcrma_noreg_submit {
-            width: 20%;
-            float: left;
-        }
-
-        div#sbwcrma_noreg_input {
-            width: 60%;
-            float: left;
-        }
-
-        div#sbwcrma_noreg_label label {
-            position: relative;
-            top: 7px;
-            font-size: 16px;
-        }
-
-        div#sbcrma_noreg_submit>button {
-            color: white;
-            background: #0c0c0c;
-            width: 100%;
-            margin: 0;
-        }
-
-        form#sbwcrma_noreg_email_form {
-            display: block;
-            overflow: auto;
-        }
-
-        div#sbwcrma_noreg_login .button {
-            width: 100%;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg {
-            top: 0;
-            left: 31%;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg th {
-            text-align: center;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg label {
-            text-align: left;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg a {
-            color: white !important;
-            text-decoration: none !important;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg a:first-child {
-            line-height: 1.4;
-        }
-
-        .sbwcrma_prod_select_modal.no_reg td {
-            text-align: center;
-        }
-    </style>
-<?php }
-
-/* js */
-add_action('wp_footer', 'sbwcrma_noreg_js');
-
-function sbwcrma_noreg_js() { ?>
-
-    <script>
-        jQuery(document).ready(function($) {
-
-        });
-    </script>
-
-<?php }
-
 /* order product select modal */
 function sbwcrma_noreg_prod_select_modal($order_id) {
 
@@ -179,23 +79,140 @@ function sbwcrma_noreg_prod_select_modal($order_id) {
         </div>
 
         <!-- submit rma -->
-        <a class="sbwcrma_submit_return" order-id="<?php echo $order_id; ?>" href="javascript:void(0)">
+        <a class="sbwcrma_submit_return_no_reg" order-id="<?php echo $order_id; ?>" href="javascript:void(0)">
             <?php pll_e('Submit Return Request'); ?>
         </a>
     <?php }
 
 /* rma status modal */
 function sbwcrma_noreg_rma_status_modal($rma_id) {
-}
+    // get post meta
+    $rma_meta = get_post_meta($rma_id);
+    ?>
+        <!-- overlay -->
+        <div class="sbwcrma_data_overlay" id="sbwcrma_data_overlay_<?php echo $rma_id; ?>" style="display: none;"></div>
+
+        <!-- modal -->
+        <div class="sbwcrma_data_modal no_reg" id="sbwcrma_data_modal_<?php echo $rma_id; ?>" style="display: none;">
+
+            <!-- close/dismiss -->
+            <a class="sbwcrma_data_modal_close" href="javascript:void(0)">x</a>
+
+            <h1><?php pll_e('Current data for this return request:'); ?></h1>
+
+            <?php
+            // generate meta data array
+            $meta_arr = [];
+
+            // loop to pupolate $meta_arr with data
+            foreach ($rma_meta as $key => $value) {
+
+                // change key names to readable format
+                switch ($key) {
+                    case $key == 'sbwcrma_order_id':
+                        $key = 'Order ID';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_user_email':
+                        $key = 'Your email address';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_user_name':
+                        $key = 'User name';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_customer_location':
+                        $key = 'Delivery address';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_reason':
+                        $key = 'Reason for return';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_products':
+                        $key = 'Products';
+                        $meta_arr[$key] = '';
+                        break;
+                    case $key == 'sbwcrma_status':
+                        $key = 'Return status';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_warehouse':
+                        $key = 'Return warehouse';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_shipping_co':
+                        $key = 'Shipping company';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    case $key == 'sbwcrma_tracking_no':
+                        $key = 'Tracking number';
+                        $meta_arr[$key] = $value[0];
+                        break;
+                    default:
+                }
+            }
+
+            // loop through and display meta to user
+            foreach ($meta_arr as $key => $value) { ?>
+                <div class="sbwcrma_data_row">
+                    <span class="sbwcrma_data_key"><?php echo $key; ?></span>
+                    <span class="sbwcrma_data_val">
+                        <?php if ($value != '') {
+                            echo ucfirst($value);
+                        } elseif ($key == 'Products') {
+                            $products = maybe_unserialize(get_post_meta($rma_id, 'sbwcrma_products', true)); ?>
+                            <div class="sbwcrma_data_modal_prods_cont no_reg">
+                                <span><?php pll_e('Product ID'); ?></span>
+                                <span><?php pll_e('Product Name'); ?></span>
+                                <span><?php pll_e('Qty'); ?></span>
+                                <?php foreach ($products as $id => $qty) { ?>
+                                    <div class="sbwcrma_rma_modal_prod_row no_reg">
+                                        <span><?php echo $id; ?></span>
+                                        <span><?php echo get_the_title($id); ?></span>
+                                        <span><?php echo $qty; ?></span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } else {
+                            pll_e('Not specified');
+                        } ?>
+                    </span>
+                </div>
+            <?php }
+
+            // check rma status; if 'instructions sent', display button for user to add shipping details for package
+            $rma_status = get_post_meta($rma_id, 'sbwcrma_status', true);
+
+            if ($rma_status == 'instructions sent' && get_post_meta($rma_id, 'sbwcrma_warehouse', true) && !get_post_meta($rma_id, 'sbwcrma_shipping_co', true)) { ?>
+                <a class="sbwcrma_submit_ship_data" href="javascript:void(0)"><?php pll_e('Already shipped? Submit shipping data'); ?></a>
+
+                <div class="sbwcrma_ship_data" style="display: none;">
+                    <!-- shipping company -->
+                    <label for="sbwcrma_ship_co"><?php pll_e('Specify shipping company:*'); ?></label>
+                    <input type="text" id="sbwcrma_ship_co">
+
+                    <!-- tracking number -->
+                    <label for="sbwcrma_ship_track_no"><?php pll_e('Specify package tracking number:*'); ?></label>
+                    <input type="text" id="sbwcrma_ship_track_no">
+
+                    <!-- shipping data error -->
+                    <span class="shipp_error" style="display: none;"><?php pll_e('Please provide all required shipping data.'); ?></span>
+
+                    <!-- submit shipping data -->
+                    <a class="sbwcrma_submit_shipp_data" rma-id="<?php echo $rma_id; ?>" href="javascript:void(0)"><?php pll_e('Submit shipping data'); ?></a>
+                </div>
+            <?php } ?>
+        </div>
+    <?php }
 
 /* submitted returns list */
 function sbwcrma_noreg_submitted_rmas() { ?>
 
         <!-- submitted returns -->
-        <div id="sbwcrma_submitted_returns" style="display: none;">
+        <div id="sbwcrma_submitted_returns_no_reg" style="display: none;">
 
             <?php
-
             $rmas = new WP_Query([
                 'post_type' => 'rma',
                 'post_status' => 'publish',
@@ -207,10 +224,10 @@ function sbwcrma_noreg_submitted_rmas() { ?>
             if ($rmas->have_posts()) { ?>
 
                 <p class="sbwcrma_list">
-                    <?php pll_e('Below is a list of returns you have submitted.<br><b>If you have already shipped a return, click on the <u>View Details</u> link to add the associated shipping data (shipping company and package tracking number) so that our staff members can keep track of the progress of your return.</b>'); ?>
+                    <?php pll_e('<b>Below is a list of returns you have submitted.<br>If you have already shipped a return, click on the <u>View Details</u> link to add the associated shipping data (shipping company and package tracking number) so that our staff members can keep track of the progress of your return.</b>'); ?>
                 </p>
 
-                <table>
+                <table class="sbcrma_rma_data_table_no_reg">
                     <tr>
                         <th><?php pll_e('Return ID'); ?></th>
                         <th><?php pll_e('Submitted On'); ?></th>

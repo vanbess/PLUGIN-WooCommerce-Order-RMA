@@ -258,7 +258,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
             $admin_emails = get_option('sbwcrma_emails');
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
             $headers[] = 'From: Chicnmix Website <website@chicnmix.com>';
-            $message = pll__('Good day<br> RMA with ID' . $rma_id . ' has been shipped.<br><br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
+            $message = pll__('Good day<br><br> RMA with ID ' . $rma_id . ' has been shipped.<br><br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
             $message .= pll__('<br><br><a target="_blank" href="' . $rma_admin_link . '">View RMA data</a>');
 
             if ($shipco_added || $shiptrack_added || $status_updated) {
