@@ -6,12 +6,16 @@
 
 class SBWC_Admin {
 
-   use SBWCRMA_Admin_Modals;
+   use SBWCRMA_Admin_Modals, SBWCRMA_Custom_Cols;
 
    /**
     * Class init
     */
    public static function init() {
+
+      // init custom cols and associated data
+      SBWCRMA_Custom_Cols::init();
+
       // add settings page
       add_submenu_page('edit.php?post_type=rma', 'RMA Settings', 'RMA Settings', 'manage_options', 'sbwc-rma-settings', [__CLASS__, 'rma_settings']);
 

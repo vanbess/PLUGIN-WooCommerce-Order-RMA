@@ -27,6 +27,7 @@ function sbwcrma_init() {
 
     // admin class
     require_once SBWCRMA_PATH . 'classes/traits/trait-admin-modals.php';
+    require_once SBWCRMA_PATH . 'classes/traits/trait-admin-columns.php';
     require_once SBWCRMA_PATH . 'classes/class-sbwcrma-admin.php';
 
     // class front
