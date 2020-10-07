@@ -58,7 +58,7 @@ trait SBWCRMA_Prod_Select_Modal {
                             <td>
                                 <input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $prod_id; ?>" target="#sbwcma_prod_qty_<?php echo $prod_id; ?>">
                             </td>
-                            <td><?php pll_e($prod_data['name']); ?></td>
+                            <td><?php $prod_data['name']; ?></td>
                             <td><?php echo $prod_data['quantity']; ?></td>
                             <td>
                                 <select id="sbwcma_prod_qty_<?php echo $prod_id; ?>">

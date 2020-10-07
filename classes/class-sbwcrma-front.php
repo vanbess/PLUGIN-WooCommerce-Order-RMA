@@ -72,7 +72,7 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
 
                 // if orders present list them, else display error message
                 if ($orders && is_array($orders) || is_object($orders)) { ?>
-                    <p><?php pll_e('Select the order below you would like to log a return for.'); ?></p>
+                    <p><?php pll_e('Select the order below you would like to log a return for'); ?></p>
 
                     <!-- user orders list -->
                     <table id="sbwcrma_order_list">

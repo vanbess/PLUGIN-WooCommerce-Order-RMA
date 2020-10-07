@@ -106,7 +106,7 @@ trait SBWCRMA_Admin_Modals {
             <a class="sbwcrma_admin_modal_close" href="javascript:void(0)">x</a>
 
             <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'rejected') { ?>
-                <p class="sbwcrma_done"><?php pll_e('RMA approval notification has already been sent to this client.'); ?></p>
+                <p class="sbwcrma_done"><?php pll_e('RMA rejection notification has already been sent to this client.'); ?></p>
             <?php } else { ?>
                 <h1><?php pll_e('Reject RMA'); ?></h1>
                 <!-- rejection message to client (required at this stage) -->

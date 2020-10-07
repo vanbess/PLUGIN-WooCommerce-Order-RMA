@@ -53,7 +53,7 @@ class SBWC_Admin {
             <label class="sbwcrma_admin_labels" for="sbwcrma_email_from">
                <?php pll_e('The email address or addresses all RMA related emails will originate from:'); ?>
             </label>
-            <input value="<?php print get_option('sbwcrma_emails_from'); ?>" type="text" id="sbwcrma_emails_from" placeholder="<?php pll_e('email address 1, email address 2 etc'); ?>">
+            <input value="<?php print get_option('sbwcrma_emails_from'); ?>" type="text" id="sbwcrma_emails_from">
          </div>
 
          <!-- save settings -->
@@ -181,8 +181,8 @@ class SBWC_Admin {
       <div id="sbwcrma_actions">
 
          <!-- send instructions to customer -->
-         <a id="sbwcrma_send_instructions" href="javascript:void(0)" title="<?php pll_e('Send RMA instructions to customer'); ?>">
-            <?php pll_e('Send RMA Instructions'); ?>
+         <a id="sbwcrma_send_instructions" href="javascript:void(0)" title="<?php pll_e('Send RMA instructions to client'); ?>">
+            <?php pll_e('Send instructions'); ?>
          </a>
 
          <?php
@@ -199,7 +199,7 @@ class SBWC_Admin {
          ?>
 
          <!-- approve rma request -->
-         <a id="sbwcrma_approve" href="javascript:void(0)"><?php pll_e('Approve RMA Request'); ?></a>
+         <a id="sbwcrma_approve" href="javascript:void(0)"><?php pll_e('Approve RMA'); ?></a>
 
          <?php
          // rma approve modal
@@ -207,7 +207,7 @@ class SBWC_Admin {
          ?>
 
          <!-- reject rma with reasons -->
-         <a id="sbwcrma_reject" href="javascript:void(0)"><?php pll_e('Reject RMA Request'); ?></a>
+         <a id="sbwcrma_reject" href="javascript:void(0)"><?php pll_e('Reject RMA'); ?></a>
 
          <?php
          // rma reject modal

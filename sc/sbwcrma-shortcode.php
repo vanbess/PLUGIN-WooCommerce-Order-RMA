@@ -52,7 +52,7 @@ function sbwcrma_noreg_prod_select_modal($order_id) {
                         <td>
                             <input class="sbwcrma_prod_checkbox" type="checkbox" prod-id="<?php echo $prod_id; ?>" target="#sbwcma_prod_qty_<?php echo $prod_id; ?>">
                         </td>
-                        <td><?php pll_e($prod_data['name']); ?></td>
+                        <td><?php echo $prod_data['name']; ?></td>
                         <td><?php echo $prod_data['quantity']; ?></td>
                         <td>
                             <select id="sbwcma_prod_qty_<?php echo $prod_id; ?>">
@@ -345,10 +345,10 @@ function sbwcrma_noreg_display_orders($orders) { ?>
                         <label for="sbwcrma_noreg_email"><?php pll_e('Your email address:'); ?></label>
                     </div>
                     <div id="sbwcrma_noreg_input">
-                        <input type="email" name="sbwcrma_noreg_email" placeholder="your@email.com" required value="<?php echo $_GET['sbwcrma_noreg_email']; ?>">
+                        <input type="email" name="sbwcrma_noreg_email" required value="<?php echo $_GET['sbwcrma_noreg_email']; ?>">
                     </div>
                     <div id="sbcrma_noreg_submit">
-                        <button type="submit">Submit</button>
+                        <button type="submit"><?php pll_e ('Submit'); ?></button>
                     </div>
                 </form>
                 <?php
