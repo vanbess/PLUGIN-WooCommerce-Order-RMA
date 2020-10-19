@@ -24,7 +24,7 @@ trait SBWCRMA_Custom_Cols {
         // add custom cols
         $columns['rma_date'] = pll__('Date');
         $columns['rma_by'] = pll__('Submitted By');
-        $columns['rma_order'] = pll__('Order ID');
+        $columns['rma_order'] = pll__('Order No');
         $columns['rma_whouse'] = pll__('Warehouse');
         $columns['rma_status'] = pll__('RMA Status');
         $columns['rma_contact'] = pll__('Contact');
@@ -42,7 +42,8 @@ trait SBWCRMA_Custom_Cols {
                 echo get_post_meta(get_the_ID(), 'sbwcrma_user_name', true);
                 break;
             case 'rma_order':
-                echo get_post_meta(get_the_ID(), 'sbwcrma_order_id', true);
+                $order_id =  get_post_meta(get_the_ID(), 'sbwcrma_order_id', true);
+                echo get_post_meta($order_id, '_order_number_formatted', true);
                 break;
             case 'rma_whouse':
                 if (get_post_meta(get_the_ID(), 'sbwcrma_warehouse', true)) {

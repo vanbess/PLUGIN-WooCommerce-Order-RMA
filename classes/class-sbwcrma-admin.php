@@ -4,14 +4,16 @@
  * Class to render admin options
  */
 
-class SBWC_Admin {
+class SBWC_Admin
+{
 
    use SBWCRMA_Admin_Modals, SBWCRMA_Custom_Cols;
 
    /**
     * Class init
     */
-   public static function init() {
+   public static function init()
+   {
 
       // init custom cols and associated data
       SBWCRMA_Custom_Cols::init();
@@ -34,7 +36,8 @@ class SBWC_Admin {
    /**
     * Settings page content
     */
-   public static function rma_settings() { ?>
+   public static function rma_settings()
+   { ?>
 
       <div id="sbwcrma_settings_cont">
 
@@ -56,6 +59,41 @@ class SBWC_Admin {
             <input value="<?php print get_option('sbwcrma_emails_from'); ?>" type="text" id="sbwcrma_emails_from">
          </div>
 
+         <!-- warehouses and addresses -->
+         <div class="sbwcrma_input_cont">
+
+            <label class="sbwcrma_admin_labels" for="sbwcrma_wh_data">
+               <?php pll_e('Warehouse names and addresses which will be used for RMAs:'); ?>
+            </label>
+
+            <?php
+            // wh data currently defined
+            $sbwcrma_wh_data = get_option('sbwcrma_wh_data');
+
+            if ($sbwcrma_wh_data) :
+               foreach ($sbwcrma_wh_data as $wh => $address) : ?>
+                  <span><?php echo $wh; ?></span><br>
+                  <span><?php echo $address; ?></span><br>
+               <?php endforeach;
+            else : ?>
+               <span class="sbcwrma_error"><?php pll_e('There are no warehouses currently defined. Please use the inputs below to add RMA warehouses.'); ?></span>
+            <?php endif; ?>
+
+            <!-- wh data cont -->
+            <div class="sbwcrma_wh_data_cont" id="sbwcrma_wh_1">
+               <!-- wh name -->
+               <input type="text" class="sbwcrma_wh_name" placeholder="<?php pll_e('Warehouse name'); ?>">
+               <!-- wh address -->
+               <input type="text" class="sbwcrma_wh_address" placeholder="<?php pll_e('Warehouse shipping address'); ?>">
+               <!-- wh data add/rem btn cont -->
+               <div class="sbwcrma_add_rem_wh_btns">
+                  <a class="sbwcrma_add_wh" href="javascript:void(0)" title="<?php pll_e('Add warehouse'); ?>">+</a>
+                  <a class="sbwcrma_rem_wh" target="#sbwcrma_wh_1" href="javascript:void(0)" title="<?php pll_e('Delete warehouse'); ?>">-</a>
+               </div>
+            </div>
+
+         </div>
+
          <!-- save settings -->
          <div id="sbwcrma_settings_submit">
             <a class="sbwcrma_save_settings" href="javascript:void(0)"><?php pll_e('Save Settings'); ?></a>
@@ -70,25 +108,31 @@ class SBWC_Admin {
    /**
     * Add RMA post type metabox
     */
-   public static function rma_metabox() {
+   public static function rma_metabox()
+   {
       add_meta_box('rma_meta_box', 'RMA Data', [__CLASS__, 'rma_metabox_data'], 'rma', 'normal', 'high');
    }
 
    /**
     * Display RMA post type metabox data
     */
-   public static function rma_metabox_data() { ?>
+   public static function rma_metabox_data()
+   { ?>
 
       <!-- data column left -->
       <div id="sbwcrma_data_left">
 
          <!-- order and rma id -->
          <div id="sbwcrma_order_rma_id" class="sbwcrma_metadata_bits">
-            <label for="sbwcrma_order_id"><?php pll_e('Order ID'); ?></label>
-            <input readonly type="text" name="sbwcrma_order_id" id="sbwcrma_order_id" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_order_id', true); ?>">
+            <label for="sbwcrma_order_id"><?php pll_e('Order No'); ?></label>
+            <?php
+            $order_id =  get_post_meta(get_the_ID(), 'sbwcrma_order_id', true);
+            $order_no = get_post_meta($order_id, '_order_number_formatted', true);
+            ?>
+            <input readonly type="text" name="sbwcrma_order_no" id="sbwcrma_order_no" value="<?php echo $order_no ?>">
             <br>
-            <label for="sbwrma_rma_id"><?php pll_e('RMA ID'); ?></label>
-            <input type="text" name="sbwrma_rma_id" id="sbwrma_rma_id" readonly="true" value="<?php echo get_the_ID(); ?>">
+            <label for="sbwcrma_no"><?php pll_e('RMA No'); ?></label>
+            <input type="text" name="sbwcrma_no" id="sbwcrma_no" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_no', true); ?>" placeholder="<?php pll_e('Please provide an RMA number the customer should use as reference'); ?>">
          </div>
 
          <!-- client data -->
@@ -108,7 +152,9 @@ class SBWC_Admin {
          <!-- rma shipping dets -->
          <div id="sbwcrma_shipping_dets" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_warehouse"><?php pll_e('Specify warehouse to which RMA items should be sent'); ?></label>
-            <input type="text" name="sbwcrma_warehouse" id="sbwcrma_warehouse" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_warehouse', true); ?>">
+            <select name="sbwcrma_wh" id="sbwcrma_wh">
+               <option value=""></option>
+            </select>
             <br>
             <label for="sbwcrma_shipping_co"><?php pll_e('Shipping company'); ?></label>
             <input type="text" name="sbwcrma_shipping_co" id="sbwcrma_shipping_co" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_shipping_co', true); ?>">
@@ -226,15 +272,20 @@ class SBWC_Admin {
    /**
     * Save RMA custom data if needed
     */
-   public static function rma_data_save($post_id, $post) {
+   public static function rma_data_save($post_id, $post)
+   {
       if ($post->post_type == 'rma') {
          // shipping warehouse
-         if (isset($_POST['sbwcrma_warehouse'])) {
-            update_post_meta($post_id, 'sbwcrma_warehouse', $_POST['sbwcrma_warehouse']);
+         if (isset($_POST['sbwcrma_wh'])) {
+            update_post_meta($post_id, 'sbwcrma_wh', $_POST['sbwcrma_wh']);
          }
          // rma status
          if (isset($_POST['sbwcrma_status'])) {
             update_post_meta($post_id, 'sbwcrma_status', $_POST['sbwcrma_status']);
+         }
+         // rma number
+         if (isset($_POST['sbwcrma_no'])) {
+            update_post_meta($post_id, 'sbwcrma_no', $_POST['sbwcrma_no']);
          }
       }
    }
@@ -242,7 +293,8 @@ class SBWC_Admin {
    /**
     * Register scripts
     */
-   public static function rma_register_scripts() {
+   public static function rma_register_scripts()
+   {
       wp_register_script('rma_js', self::rma_js(), ['jquery'], '1.0.0');
       wp_register_script('rma_settings_js', self::rma_settings_js(), ['jquery'], '1.0.0');
       wp_register_style('rma_css', self::rma_css(), '', '1.0.0');
@@ -251,7 +303,8 @@ class SBWC_Admin {
    /**
     * Settings JS
     */
-   public static function rma_settings_js() { ?>
+   public static function rma_settings_js()
+   { ?>
       <script>
          jQuery(document).ready(function() {
             // save rma settings
@@ -281,7 +334,8 @@ class SBWC_Admin {
    /**
     * JS
     */
-   public static function rma_js() { ?>
+   public static function rma_js()
+   { ?>
 
       <!-- js -->
       <script>
@@ -426,15 +480,72 @@ class SBWC_Admin {
    /**
     * CSS
     */
-   public static function rma_css() { ?>
+   public static function rma_css()
+   { ?>
 
       <!-- css -->
       <style>
+         input.sbwcrma_wh_name,
+         input.sbwcrma_wh_address {
+            display: block;
+            width: 95%;
+            margin-bottom: 15px;
+         }
+
+         .sbwcrma_wh_data_cont {
+            position: relative;
+         }
+
+         .sbwcrma_add_rem_wh_btns {
+            position: absolute;
+            z-index: 10;
+            right: 0;
+            top: 0;
+         }
+
+         a.sbwcrma_add_wh {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0073aa;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 5px;
+         }
+
+         a.sbwcrma_rem_wh {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ca4a1f;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.5;
+         }
+
+         a.sbwcrma_add_wh:hover, a.sbwcrma_rem_wh:hover{
+            color: white;
+         }
+
+         span.sbcwrma_error {
+            color: red;
+            font-weight: 700;
+            font-style: italic;
+            padding-bottom: 15px;
+            display: block;
+         }
+
          label.sbwcrma_admin_labels {
             display: block;
             font-size: 14px;
             font-weight: 500;
             padding: 7px 2px;
+            text-transform: uppercase;
          }
 
          input#sbwcrma_emails,
@@ -617,7 +728,8 @@ class SBWC_Admin {
    /**
     * Ajax to save/update settings
     */
-   public static function rma_ajax() {
+   public static function rma_ajax()
+   {
 
       // save rma settings
       if (isset($_POST['sbwcrma_emails'])) {

@@ -31,8 +31,10 @@ trait SBWCRMA_Data_Modal {
                 // change key names to readable format
                 switch ($key) {
                     case $key == 'sbwcrma_order_id':
-                        $key = 'Order ID';
-                        $meta_arr[$key] = $value[0];
+                        $key = 'Order No';
+                        $order_id = $value[0];
+                        $order_no = get_post_meta($order_id, '_order_number_formatted', true);
+                        $meta_arr['Order No'] = $order_no;
                         break;
                     case $key == 'sbwcrma_user_email':
                         $key = 'Your email address';
