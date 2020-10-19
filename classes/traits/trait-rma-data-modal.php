@@ -31,53 +31,53 @@ trait SBWCRMA_Data_Modal {
                 // change key names to readable format
                 switch ($key) {
                     case $key == 'sbwcrma_order_id':
-                        $key = 'Order Number';
+                        $key = pll__('Order Number');
                         $order_id = $value[0];
                         $order_no = get_post_meta($order_id, '_order_number_formatted', true);
                         $meta_arr[$key] = $order_no;
                         break;
                     case $key == 'sbwcrma_no':
-                        $key = 'RMA Number';
+                        $key = pll__('RMA Number');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_user_email':
-                        $key = 'Your email address';
+                        $key = pll__('Your email address');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_user_name':
-                        $key = 'Your name';
+                        $key = pll__('Your name');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_customer_location':
-                        $key = 'Your delivery address';
+                        $key = pll__('Your delivery address');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_reason':
-                        $key = 'Reason for return';
+                        $key = pll__('Reason for return');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_products':
-                        $key = 'Products';
+                        $key = pll__('Products');
                         $meta_arr[$key] = '';
                         break;
                     case $key == 'sbwcrma_status':
-                        $key = 'Return status';
+                        $key = pll__('Return status');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_wh_name':
-                        $key = 'Return warehouse';
+                        $key = pll__('Return warehouse');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_wh_address':
-                        $key = 'Warehouse address';
+                        $key = pll__('Warehouse address');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_shipping_co':
-                        $key = 'Shipping company';
+                        $key = pll__('Shipping company');
                         $meta_arr[$key] = $value[0];
                         break;
                     case $key == 'sbwcrma_tracking_no':
-                        $key = 'Tracking number';
+                        $key = pll__('Tracking number');
                         $meta_arr[$key] = $value[0];
                         break;
                     default:

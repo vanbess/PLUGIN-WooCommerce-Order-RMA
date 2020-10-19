@@ -56,6 +56,18 @@ if (function_exists('pll_register_string')) {
    pll_register_string('sbwcrma_rma_data_modal_8', 'Specify package tracking number:*');
    pll_register_string('sbwcrma_rma_data_modal_9', 'Please provide all required shipping data.');
    pll_register_string('sbwcrma_rma_data_modal_10', 'Submit shipping data');
+   pll_register_string('sbwcrma_rma_data_modal_11', 'Order Number');
+   pll_register_string('sbwcrma_rma_data_modal_12', 'RMA Number');
+   pll_register_string('sbwcrma_rma_data_modal_13', 'Your email address');
+   pll_register_string('sbwcrma_rma_data_modal_14', 'Your name');
+   pll_register_string('sbwcrma_rma_data_modal_15', 'Your delivery address');
+   pll_register_string('sbwcrma_rma_data_modal_16', 'Reason for return');
+   pll_register_string('sbwcrma_rma_data_modal_17', 'Products');
+   pll_register_string('sbwcrma_rma_data_modal_18', 'Return status');
+   pll_register_string('sbwcrma_rma_data_modal_19', 'Return warehouse');
+   pll_register_string('sbwcrma_rma_data_modal_20', 'Warehouse address');
+   pll_register_string('sbwcrma_rma_data_modal_21', 'Shipping company');
+   pll_register_string('sbwcrma_rma_data_modal_22', 'Tracking number');
 
    // admin class
    pll_register_string('sbwcrma_admin_1', 'RMA Settings');
