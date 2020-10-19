@@ -60,7 +60,7 @@ class SBWC_Admin
          </div>
 
          <!-- warehouses and addresses -->
-         <div class="sbwcrma_input_cont">
+         <div class="sbwcrma_input_cont" id="sbwcrma_wh_data">
 
             <label class="sbwcrma_admin_labels" for="sbwcrma_wh_data">
                <?php pll_e('Warehouse names and addresses which will be used for RMAs:'); ?>
@@ -68,29 +68,40 @@ class SBWC_Admin
 
             <?php
             // wh data currently defined
-            $sbwcrma_wh_data = get_option('sbwcrma_wh_data');
+            $sbwcrma_wh_data = maybe_unserialize(get_option('sbwcrma_wh_data'));
 
-            if ($sbwcrma_wh_data) :
-               foreach ($sbwcrma_wh_data as $wh => $address) : ?>
-                  <span><?php echo $wh; ?></span><br>
-                  <span><?php echo $address; ?></span><br>
-               <?php endforeach;
-            else : ?>
-               <span class="sbcwrma_error"><?php pll_e('There are no warehouses currently defined. Please use the inputs below to add RMA warehouses.'); ?></span>
-            <?php endif; ?>
-
-            <!-- wh data cont -->
-            <div class="sbwcrma_wh_data_cont" id="sbwcrma_wh_1">
-               <!-- wh name -->
-               <input type="text" class="sbwcrma_wh_name" placeholder="<?php pll_e('Warehouse name'); ?>">
-               <!-- wh address -->
-               <input type="text" class="sbwcrma_wh_address" placeholder="<?php pll_e('Warehouse shipping address'); ?>">
-               <!-- wh data add/rem btn cont -->
-               <div class="sbwcrma_add_rem_wh_btns">
-                  <a class="sbwcrma_add_wh" href="javascript:void(0)" title="<?php pll_e('Add warehouse'); ?>">+</a>
-                  <a class="sbwcrma_rem_wh" target="#sbwcrma_wh_1" href="javascript:void(0)" title="<?php pll_e('Delete warehouse'); ?>">-</a>
+            if ($sbwcrma_wh_data) : ?>
+               <p class="sbwcrma_add_additional_whs"><?php pll_e('Warehouses currently defined: '); ?></p>
+               <?php foreach ($sbwcrma_wh_data as $wh => $address) : ?>
+                  <div class="sbwcrma_wh_data_cont">
+                     <hr class="sbwcrma_wh_hr">
+                     <input type="text" class="sbwcrma_wh_name" placeholder="<?php pll_e('Warehouse name'); ?>" value="<?php echo $wh; ?>">
+                     <input type="text" class="sbwcrma_wh_address" placeholder="<?php pll_e('Warehouse shipping address'); ?>" value="<?php echo $address; ?>">
+                     <div class="sbwcrma_add_rem_wh_btns">
+                        <a class="sbwcrma_rem_wh" href="javascript:void(0)" title="<?php pll_e('Delete warehouse'); ?>" style="margin-top: 42px;">-</a>
+                     </div>
+                  </div>
+               <?php endforeach; ?>
+               <p class="sbwcrma_add_additional_whs"><?php pll_e('Use the inputs below to add additional warehouses to your warehouse list.'); ?></p>
+               <div class="sbwcrma_wh_data_cont">
+                  <input type="text" class="sbwcrma_wh_name" placeholder="<?php pll_e('Warehouse name'); ?>">
+                  <input type="text" class="sbwcrma_wh_address" placeholder="<?php pll_e('Warehouse shipping address'); ?>">
+                  <div class="sbwcrma_add_rem_wh_btns">
+                     <a class="sbwcrma_add_wh" href="javascript:void(0)" title="<?php pll_e('Add warehouse'); ?>">+</a>
+                     <a class="sbwcrma_rem_wh" href="javascript:void(0)" title="<?php pll_e('Delete warehouse'); ?>">-</a>
+                  </div>
                </div>
-            </div>
+            <?php else : ?>
+               <span class="sbcwrma_error"><?php pll_e('There are no warehouses currently defined. Please use the inputs below to add RMA warehouses.'); ?></span>
+               <div class="sbwcrma_wh_data_cont">
+                  <input type="text" class="sbwcrma_wh_name" placeholder="<?php pll_e('Warehouse name'); ?>">
+                  <input type="text" class="sbwcrma_wh_address" placeholder="<?php pll_e('Warehouse shipping address'); ?>">
+                  <div class="sbwcrma_add_rem_wh_btns">
+                     <a class="sbwcrma_add_wh" href="javascript:void(0)" title="<?php pll_e('Add warehouse'); ?>">+</a>
+                     <a class="sbwcrma_rem_wh" href="javascript:void(0)" title="<?php pll_e('Delete warehouse'); ?>">-</a>
+                  </div>
+               </div>
+            <?php endif; ?>
 
          </div>
 
@@ -152,9 +163,22 @@ class SBWC_Admin
          <!-- rma shipping dets -->
          <div id="sbwcrma_shipping_dets" class="sbwcrma_metadata_bits">
             <label for="sbwcrma_warehouse"><?php pll_e('Specify warehouse to which RMA items should be sent'); ?></label>
-            <select name="sbwcrma_wh" id="sbwcrma_wh">
-               <option value=""></option>
-            </select>
+
+            <?php
+            $sbwcrma_wh_data = maybe_unserialize(get_option('sbwcrma_wh_data'));
+
+            if ($sbwcrma_wh_data) : ?>
+               <select name="sbwcrma_wh_name" id="sbwcrma_wh_name" current="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_wh_name', true); ?>">
+                  <option value=""><?php pll_e('Please select...'); ?></option>
+                  <?php foreach ($sbwcrma_wh_data as $wh => $addy) : ?>
+                     <option value="<?php echo $wh; ?>" addy="<?php echo $addy; ?>"><?php echo $wh; ?></option>
+                  <?php endforeach; ?>
+               </select>
+               <input type="hidden" name="sbwcrma_wh_address" id="sbwcrma_wh_address" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_wh_address', true); ?>">
+            <?php else : ?>
+               <span class="sbcwrma_error"><?php pll_e('There are no warehouses currently defined. Please navigate to the RMA Settings page to define RMA warehouses.'); ?></span>
+            <?php endif;
+            ?>
             <br>
             <label for="sbwcrma_shipping_co"><?php pll_e('Shipping company'); ?></label>
             <input type="text" name="sbwcrma_shipping_co" id="sbwcrma_shipping_co" readonly="true" placeholder="<?php pll_e('to be completed by client'); ?>" value="<?php echo get_post_meta(get_the_ID(), 'sbwcrma_shipping_co', true); ?>">
@@ -276,8 +300,12 @@ class SBWC_Admin
    {
       if ($post->post_type == 'rma') {
          // shipping warehouse
-         if (isset($_POST['sbwcrma_wh'])) {
-            update_post_meta($post_id, 'sbwcrma_wh', $_POST['sbwcrma_wh']);
+         if (isset($_POST['sbwcrma_wh_name'])) {
+            update_post_meta($post_id, 'sbwcrma_wh_name', $_POST['sbwcrma_wh_name']);
+         }
+         // shipping warehouse address
+         if (isset($_POST['sbwcrma_wh_address'])) {
+            update_post_meta($post_id, 'sbwcrma_wh_address', $_POST['sbwcrma_wh_address']);
          }
          // rma status
          if (isset($_POST['sbwcrma_status'])) {
@@ -307,6 +335,29 @@ class SBWC_Admin
    { ?>
       <script>
          jQuery(document).ready(function() {
+
+            // add warehouse data
+            $(document).on('click', 'a.sbwcrma_add_wh', function(e) {
+               e.preventDefault();
+
+               var append = '<hr class="sbwcrma_wh_hr">';
+               append += '<div class="sbwcrma_wh_data_cont">';
+               append += '<input type="text" class="sbwcrma_wh_name" placeholder="Warehouse name">';
+               append += '<input type="text" class="sbwcrma_wh_address" placeholder="Warehouse shipping address">';
+               append += '<div class="sbwcrma_add_rem_wh_btns">';
+               append += '<a class="sbwcrma_add_wh" href="javascript:void(0)" title="Add warehouse">+</a>';
+               append += '<a class="sbwcrma_rem_wh" href="javascript:void(0)" title="Delete warehouse">-</a>';
+               append += '</div>';
+               append += '</div>';
+
+               $('div#sbwcrma_wh_data').append(append);
+            });
+
+            // remove warehouse data
+            $(document).on('click', 'a.sbwcrma_rem_wh', function() {
+               $(this).parent().parent().remove();
+            });
+
             // save rma settings
             $('a.sbwcrma_save_settings').on('click', function(e) {
                e.preventDefault();
@@ -314,11 +365,30 @@ class SBWC_Admin
                // get data to submit
                var emails = $('input#sbwcrma_emails').val();
                var emails_from = $('input#sbwcrma_emails_from').val();
+               var wh_names = [];
+               var wh_addys = [];
+
+               // wh names
+               $('input.sbwcrma_wh_name').each(function() {
+                  if ($(this).val()) {
+                     wh_names.push($(this).val());
+                  }
+               });
+
+               // wh addys
+               $('input.sbwcrma_wh_address').each(function() {
+                  if ($(this).val()) {
+                     wh_addys.push($(this).val());
+                  }
+               });
 
                var data = {
                   'action': 'rma_ajax',
+                  'sbcrma_save_settings': true,
                   'sbwcrma_emails': emails,
-                  'sbwcrma_emails_from': emails_from
+                  'sbwcrma_emails_from': emails_from,
+                  'sbwcrma_wh_names': wh_names,
+                  'sbwcrma_wh_addys': wh_addys
                };
 
                $.post(ajaxurl, data, function(response) {
@@ -327,19 +397,30 @@ class SBWC_Admin
                   location.reload();
                });
             });
+
+
+
          });
       </script>
    <?php }
 
    /**
-    * JS
+    * RMA CPT JS
     */
    public static function rma_js()
    { ?>
-
-      <!-- js -->
       <script>
          jQuery(document).ready(function($) {
+
+            // set selected wh
+            var selected_wh = $('select#sbwcrma_wh_name').attr('current');
+            $('select#sbwcrma_wh_name').val(selected_wh);
+
+            // wh select on change
+            $('select#sbwcrma_wh_name').change(function(e) {
+               e.preventDefault();
+               $('input#sbwcrma_wh_address').val($(this).find(':selected').attr('addy'));
+            });
 
             // set rma status
             var rma_status = '<?php echo get_post_meta(get_the_ID(), 'sbwcrma_status', true); ?>';
@@ -349,11 +430,13 @@ class SBWC_Admin
             $('a#sbwcrma_send_instructions').click(function(e) {
                e.preventDefault();
 
-               var whouse = $('input#sbwcrma_warehouse').val();
+               var whouse = $('select#sbwcrma_wh_name').val();
+               var rma_no = $('input#sbwcrma_no').val();
 
-               if (whouse) {
+               if (whouse && rma_no) {
                   $('div#sbwcrma_instructions_overlay, div#sbwcrma_instructions_modal').show();
                   $('input#sbwcrma_warehouse').val(whouse);
+                  $('input#sbwcrma_no').val(rma_no);
 
                   $('a.sbwcrma_send_instructions').click(function(e) {
                      e.preventDefault();
@@ -367,6 +450,8 @@ class SBWC_Admin
                            'action': 'rma_ajax',
                            'rma_id': rma_id,
                            'whouse': whouse,
+                           'whouse_addy': $('input#sbwcrma_wh_address').val(),
+                           'rma_no': $('input#sbwcrma_no').val(),
                            'instr': instructions
                         };
 
@@ -382,7 +467,7 @@ class SBWC_Admin
                   });
 
                } else {
-                  alert('<?php pll_e('Destination warehouse is required!'); ?>');
+                  alert('<?php pll_e('Destination warehouse and RMA number is required!'); ?>');
                }
 
 
@@ -492,6 +577,18 @@ class SBWC_Admin
             margin-bottom: 15px;
          }
 
+         hr.sbwcrma_wh_hr {
+            border: 0;
+            border-top: 1px dashed #b9b9b9;
+            border-bottom: 1px dashed #fafafa;
+            margin-bottom: 13px;
+         }
+
+         p.sbwcrma_add_additional_whs {
+            font-weight: 700;
+            font-style: italic;
+         }
+
          .sbwcrma_wh_data_cont {
             position: relative;
          }
@@ -528,7 +625,8 @@ class SBWC_Admin
             line-height: 1.5;
          }
 
-         a.sbwcrma_add_wh:hover, a.sbwcrma_rem_wh:hover{
+         a.sbwcrma_add_wh:hover,
+         a.sbwcrma_rem_wh:hover {
             color: white;
          }
 
@@ -542,10 +640,9 @@ class SBWC_Admin
 
          label.sbwcrma_admin_labels {
             display: block;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             padding: 7px 2px;
-            text-transform: uppercase;
          }
 
          input#sbwcrma_emails,
@@ -566,6 +663,10 @@ class SBWC_Admin
             font-size: 16px;
             font-weight: 500;
             border-radius: 3px;
+         }
+
+         a.sbwcrma_save_settings:hover {
+            color: white;
          }
 
          div#sbwcrma_settings_cont textarea {
@@ -732,14 +833,25 @@ class SBWC_Admin
    {
 
       // save rma settings
-      if (isset($_POST['sbwcrma_emails'])) {
+      if (isset($_POST['sbcrma_save_settings'])) {
 
          // print_r($_POST);
 
-         $emails_saved = update_option('sbwcrma_emails', $_POST['sbwcrma_emails']);
-         $from_emails_saved = update_option('sbwcrma_emails_from', $_POST['sbwcrma_emails_from']);
+         // get data
+         $emails = $_POST['sbwcrma_emails'];
+         $emails_from = $_POST['sbwcrma_emails_from'];
+         $wh_names = $_POST['sbwcrma_wh_names'];
+         $wh_addys = $_POST['sbwcrma_wh_addys'];
 
-         if ($emails_saved || $from_emails_saved) {
+         // combine wh names and addys into single array
+         $wh_data = array_combine($wh_names, $wh_addys);
+
+         // save settings data
+         $emails_saved = update_option('sbwcrma_emails', $emails);
+         $from_emails_saved = update_option('sbwcrma_emails_from', $emails_from);
+         $wh_data_saved = update_option('sbwcrma_wh_data', maybe_serialize($wh_data));
+
+         if ($emails_saved || $from_emails_saved || $wh_data_saved) {
             pll_e('RMA settings saved successfully.');
          } else {
             pll_e('RMA settings could not be saved. Please reload the page and try again.');
@@ -752,12 +864,18 @@ class SBWC_Admin
          // post data
          $instructions = $_POST['instr'];
          $rma_id = $_POST['rma_id'];
+         $rma_no = $_POST['rma_no'];
          $whouse = $_POST['whouse'];
+         $whouse_addy = $_POST['whouse_addy'];
+
+         $whouse_addy_readable = str_replace(', ', '<br>', $whouse_addy);
 
          // update post meta
          $status_updated = update_post_meta($rma_id, 'sbwcrma_status', 'instructions sent');
-         $whouse_updated = update_post_meta($rma_id, 'sbwcrma_warehouse', $whouse);
+         $whouse_updated = update_post_meta($rma_id, 'sbwcrma_wh_name', $whouse);
          $insructions_updated = update_post_meta($rma_id, 'sbwcrma_instructions', $instructions);
+         $whouse_addy_updated = update_post_meta($rma_id, 'sbwcrma_wh_address', $whouse_addy);
+         $rma_no_updated = update_post_meta($rma_id, 'sbwcrma_no', $rma_no);
 
          // email data
          $user_name = get_post_meta($rma_id, 'sbwcrma_user_name', true);
@@ -767,8 +885,11 @@ class SBWC_Admin
          $from = get_option('sbwcrma_emails_from');
          $message = "Good day $user_name<br><br>";
          $message .= "<b>Instructions for further processing of your return follows.</b><br><br>";
-         $message .= "<b>Your return needs to be shipped to: $whouse</b><br><br>";
+         $message .= "<b>Your return needs to be shipped to:<br><br> $whouse<br>$whouse_addy_readable</b><br><br>";
+         $message .= "<b>Please make sure you use the following RMA number as reference:<br><br>$rma_no</b><br><br>";
+         $message .= "<b>---Message from admin:---</b><br><br>";
          $message .= $instructions . "<br><br>";
+         $message .= "<b>---Message from admin ends---</b><br><br>";
          $message .= "If you have any questions or concerns please do not hesitate to contact us by responding to this email.<br><br>";
          $message .= "You can submit shipping data for your return via your accounts dashboard, or, if you do not have an account, via the return submission page where you originally submitted your return request.<br><br>";
          $message .= "Regards, <br><br>$from_name";
@@ -776,7 +897,7 @@ class SBWC_Admin
          $headers[] = "Content-Type: text/html; charset=UTF-8";
 
          // send email if post meta updated successfully
-         if ($status_updated || $whouse_updated || $insructions_updated) {
+         if ($status_updated || $whouse_updated || $insructions_updated || $whouse_addy_updated || $rma_no_updated) {
             wp_mail($user_email, $subject, $message, $headers);
             pll_e('Instructions successfully sent.');
          } else {

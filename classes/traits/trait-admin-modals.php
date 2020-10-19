@@ -22,10 +22,16 @@ trait SBWCRMA_Admin_Modals {
             <?php if (get_post_meta(get_the_ID(), 'sbwcrma_status', true) == 'pending') { ?>
 
                 <h1><?php pll_e('Send RMA instructions to client'); ?></h1>
+
                 <!-- ship to warehouse -->
                 <label for="sbwcrma_warehouse"><?php pll_e('Ship to warehouse:'); ?></label>
                 <input id="sbwcrma_warehouse" type="text" value="" readonly>
 
+                <!-- rma number -->
+                <label for="sbwcrma_no"><?php pll_e('RMA No:'); ?></label>
+                <input id="sbwcrma_no" type="text" value="" readonly>
+
+                <!-- rma instructions -->
                 <label for="sbwcrma_instructions"><?php pll_e('Instructions to client:'); ?></label>
                 <textarea id="sbwcrma_instructions" cols="30" rows="10" placeholder="<?php pll_e('Add your message to the client here'); ?>"></textarea>
                 <a class="sbwcrma_send_instructions" rma-id="<?php echo get_the_ID(); ?>" href="javascript:void(0)"><?php pll_e('Send instructions'); ?></a>

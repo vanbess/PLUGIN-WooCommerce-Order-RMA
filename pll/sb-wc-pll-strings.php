@@ -70,6 +70,8 @@ if (function_exists('pll_register_string')) {
    pll_register_string('sbwcrma_admin_6_8', 'Warehouse shipping address');
    pll_register_string('sbwcrma_admin_6_9', 'Add warehouse');
    pll_register_string('sbwcrma_admin_6_9_1', 'Delete warehouse');
+   pll_register_string('sbwcrma_admin_6_9_2', 'Use the inputs below to add additional warehouses to your warehouse list.');
+   pll_register_string('sbwcrma_admin_6_9_3', 'Warehouses currently defined:');
    pll_register_string('sbwcrma_admin_7', 'Client name');
    pll_register_string('sbwcrma_admin_8', 'Client email address');
    pll_register_string('sbwcrma_admin_9', 'Client shipping address/location');
@@ -89,7 +91,7 @@ if (function_exists('pll_register_string')) {
    pll_register_string('sbwcrma_admin_23', 'RMA Qty');
    pll_register_string('sbwcrma_admin_24', 'Mark RMA as received/being reviewed');
    pll_register_string('sbwcrma_admin_25', 'Please enter instructions to the client!');
-   pll_register_string('sbwcrma_admin_26', 'Destination warehouse is required!');
+   pll_register_string('sbwcrma_admin_26', 'Destination warehouse and RMA number is required!');
    pll_register_string('sbwcrma_admin_27', 'A reason for the rejection of this RMA is required!');
    pll_register_string('sbwcrma_admin_28', 'RMA settings saved successfully.');
    pll_register_string('sbwcrma_admin_29', 'RMA settings could not be saved. Please reload the page and try again.');
