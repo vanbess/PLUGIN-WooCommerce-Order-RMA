@@ -460,6 +460,7 @@ class SBWCRMA_Frontend_Scripts {
             /* NON REGISTERED USERS */
             div#sbwcrma_noreg_email_input {
                 overflow: auto;
+                overflow-x: hidden;
                 width: 50vw;
                 margin: 0 auto;
                 min-width: 360px;

@@ -4,7 +4,8 @@
 add_shortcode('sbwcrma_sc', 'sbwcrma_sc');
 
 /* order product select modal */
-function sbwcrma_noreg_prod_select_modal($order_id) {
+function sbwcrma_noreg_prod_select_modal($order_id)
+{
 
     $order_data = wc_get_order($order_id);
     $products = $order_data->get_items();
@@ -85,7 +86,8 @@ function sbwcrma_noreg_prod_select_modal($order_id) {
     <?php }
 
 /* rma status modal */
-function sbwcrma_noreg_rma_status_modal($rma_id) {
+function sbwcrma_noreg_rma_status_modal($rma_id)
+{
     // get post meta
     $rma_meta = get_post_meta($rma_id);
     ?>
@@ -207,7 +209,8 @@ function sbwcrma_noreg_rma_status_modal($rma_id) {
     <?php }
 
 /* submitted returns list */
-function sbwcrma_noreg_submitted_rmas() { ?>
+function sbwcrma_noreg_submitted_rmas()
+{ ?>
 
         <!-- submitted returns -->
         <div id="sbwcrma_submitted_returns_no_reg" style="display: none;">
@@ -265,7 +268,8 @@ function sbwcrma_noreg_submitted_rmas() { ?>
 
 
 /* display orders */
-function sbwcrma_noreg_display_orders($orders) { ?>
+function sbwcrma_noreg_display_orders($orders)
+{ ?>
 
         <div id="sbwcrma_noreg_orders_cont">
 
@@ -328,7 +332,8 @@ function sbwcrma_noreg_display_orders($orders) { ?>
     }
 
     /* core/render email address input */
-    function sbwcrma_sc() {
+    function sbwcrma_sc()
+    {
 
         // check if user is logged in and redirect to dashboard if true, else display email address input
         if (is_user_logged_in()) {
@@ -348,7 +353,7 @@ function sbwcrma_noreg_display_orders($orders) { ?>
                         <input type="email" name="sbwcrma_noreg_email" required value="<?php echo $_GET['sbwcrma_noreg_email']; ?>">
                     </div>
                     <div id="sbcrma_noreg_submit">
-                        <button type="submit"><?php pll_e ('Submit'); ?></button>
+                        <button type="submit"><?php pll_e('Submit'); ?></button>
                     </div>
                 </form>
                 <?php
@@ -366,7 +371,11 @@ function sbwcrma_noreg_display_orders($orders) { ?>
                             <?php pll_e('According to our customer database a user with that email address is already registered. Please log in using the form below to continue.'); ?>
                         </p>
                         <div id="sbwcrma_noreg_login">
-                            <?php wp_login_form(); ?>
+                            <?php
+                            $curr_lang = pll_current_language();
+                            $redirect = home_url($curr_lang . '/my-account/');
+                            wp_login_form(['redirect' => $redirect]);
+                            ?>
                         </div>
                         <?php } else {
 
