@@ -13,7 +13,7 @@ class SBWCRMA_Backend_Scripts
     public static function sbwc_admin_js()
     { ?>
         <script>
-            jQuery(document).ready(function() {
+            jQuery(document).ready(function($) {
 
                 // add warehouse data
                 $(document).on('click', 'a.sbwcrma_add_wh', function(e) {

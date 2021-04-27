@@ -43,11 +43,11 @@ function sbwcrma_init()
     function sbwcrma_front_scripts()
     {
         wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Frontend_Scripts::sbwc_front_js(), ['jquery'], '1.0.0', true);
-        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css(), []. '1.0.0');
+        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css(), [], '1.0.0');
     }
 
     // admin enqueue js and css
-    add_action('admin_enqueue_scripts', 'sbwc_rma_admin_scripts');
+    add_action('admin_footer', 'sbwc_rma_admin_scripts');
     function sbwc_rma_admin_scripts()
     {
         wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Backend_Scripts::sbwc_admin_js(), ['jquery'], '1.0.0', true);
