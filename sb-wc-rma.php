@@ -18,33 +18,45 @@ define('SBWCRMA_URI', plugin_dir_url(__FILE__));
 
 add_action('plugins_loaded', 'sbwcrma_init');
 
-function sbwcrma_init() {
+function sbwcrma_init()
+{
     // custom post type
-    require_once SBWCRMA_PATH . 'cpt/sb-wc-rma-cpt.php';
+    include SBWCRMA_PATH . 'cpt/sb-wc-rma-cpt.php';
 
     // register pll strings
-    require_once SBWCRMA_PATH . 'pll/sb-wc-pll-strings.php';
+    include SBWCRMA_PATH . 'pll/sb-wc-pll-strings.php';
 
     // admin class
-    require_once SBWCRMA_PATH . 'classes/traits/trait-admin-modals.php';
-    require_once SBWCRMA_PATH . 'classes/traits/trait-admin-columns.php';
-    require_once SBWCRMA_PATH . 'classes/class-sbwcrma-admin.php';
+    include SBWCRMA_PATH . 'classes/traits/trait-admin-modals.php';
+    include SBWCRMA_PATH . 'classes/traits/trait-admin-columns.php';
+    include SBWCRMA_PATH . 'classes/class-sbwcrma-admin.php';
 
     // class front
-    require_once SBWCRMA_PATH . 'classes/traits/trait-product-select-modal.php';
-    require_once SBWCRMA_PATH . 'classes/traits/trait-rma-data-modal.php';
-    require_once SBWCRMA_PATH . 'classes/assets/class-sbwcrma-frontend-scripts.php';
+    include SBWCRMA_PATH . 'classes/traits/trait-product-select-modal.php';
+    include SBWCRMA_PATH . 'classes/traits/trait-rma-data-modal.php';
+    include SBWCRMA_PATH . 'classes/assets/class-backend-scripts.php';
+    include SBWCRMA_PATH . 'classes/assets/class-frontend-scripts.php';
 
     // enqueue frontend js and css
     add_action('wp_footer', 'sbwcrma_front_scripts');
 
-    function sbwcrma_front_scripts() {
-        wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Frontend_Scripts::sbwc_front_js(), ['jquery']);
-        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css());
+    function sbwcrma_front_scripts()
+    {
+        wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Frontend_Scripts::sbwc_front_js(), ['jquery'], '1.0.0', true);
+        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Frontend_Scripts::sbwc_front_css(), []. '1.0.0');
     }
 
-    require_once SBWCRMA_PATH . 'classes/class-sbwcrma-front.php';
+    // admin enqueue js and css
+    add_action('admin_enqueue_scripts', 'sbwc_rma_admin_scripts');
+    function sbwc_rma_admin_scripts()
+    {
+        wp_enqueue_script('sbwcrma_js_front', SBWCRMA_Backend_Scripts::sbwc_admin_js(), ['jquery'], '1.0.0', true);
+        wp_enqueue_style('sbwcrma_css_front', SBWCRMA_Backend_Scripts::sbwc_admin_css(), [], '1.0.0');
+    }
+
+    // front class
+    include SBWCRMA_PATH . 'classes/class-sbwcrma-front.php';
 
     // shortcode
-    require_once SBWCRMA_PATH. 'sc/sbwcrma-shortcode.php';
+    include SBWCRMA_PATH . 'sc/sbwcrma-shortcode.php';
 }
