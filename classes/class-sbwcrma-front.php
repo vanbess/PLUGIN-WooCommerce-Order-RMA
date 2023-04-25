@@ -245,19 +245,26 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
 
         // submit shipping data for rma (frontend)
         if (isset($_POST['shipco'])) {
-            $shipco = $_POST['shipco'];
-            $shiptrack = $_POST['shiptrack'];
-            $rma_id = $_POST['rma_id'];
 
-            $shipco_added = update_post_meta($rma_id, 'sbwcrma_shipping_co', $shipco);
+            $shipco    = $_POST['shipco'];
+            $shiptrack = $_POST['shiptrack'];
+            $rma_id    = $_POST['rma_id'];
+
+            $shipco_added    = update_post_meta($rma_id, 'sbwcrma_shipping_co', $shipco);
             $shiptrack_added = update_post_meta($rma_id, 'sbwcrma_tracking_no', $shiptrack);
-            $status_updated = update_post_meta($rma_id, 'sbwcrma_status', 'items shipped');
+            $status_updated  = update_post_meta($rma_id, 'sbwcrma_status', 'items shipped');
+
+            // setup from header
+            $website_name = get_bloginfo('name');
+            $url          = get_bloginfo('url');
+            $domain       = parse_url($url, PHP_URL_HOST);
+            $from         = "$website_name <website@$domain>";
 
             // email vars
             $rma_admin_link = admin_url('post.php?post=' . $rma_id . '&action=edit');
             $admin_emails = get_option('sbwcrma_emails');
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
-            $headers[] = 'From: Chicnmix Website <website@chicnmix.com>';
+            $headers[] = 'From: ' . $from;
             $message = pll__('Good day<br><br> RMA with ID ' . $rma_id . ' has been shipped.<br><br>Shipping company: ' . $shipco . '<br>Tracking number: ' . $shiptrack);
             $message .= pll__('<br><br><a target="_blank" href="' . $rma_admin_link . '">View RMA data</a>');
 
@@ -270,6 +277,5 @@ class SBWCRMA_Front extends SBWCRMA_Frontend_Scripts {
         }
         wp_die();
     }
-
 }
 SBWCRMA_Front::init();
