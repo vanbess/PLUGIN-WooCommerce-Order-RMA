@@ -9,10 +9,11 @@ trait SBWCRMA_Prod_Select_Modal {
      * Display RMA product select modal
      */
     private static function display_modal($order_id) {
+
         $order_data = wc_get_order($order_id);
         $products = $order_data->get_items();
 
-        print $products['data'];
+        // print $products['data'];
 ?>
 
         <!-- modal overlay -->
