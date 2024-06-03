@@ -1,6 +1,6 @@
 # PLUGIN: Order RMA (Return Merchandise Authorisation) for WooCommerce
 
-This plugin adds RMA management capabalities for WooCommerce orders. 
+This plugin adds RMA submission (by client on frontend) and management capabalities (by staff in backend) for WooCommerce orders. 
 
 Supports both registered and non-registered users.
 
